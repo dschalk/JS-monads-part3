@@ -1,4 +1,4 @@
-#JS-monads-part2
+#JS-monads-part3
  
 This is the third page of the `Javascript Monads` series.  
 
