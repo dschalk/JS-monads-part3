@@ -687,6 +687,29 @@ var next = function next(x,condition,mon2) {
   return mon
 }
 
+var addObj = function addObj(a,mon,key,val) {
+  mon.x[key] = val;
+  return mon;
+}
+
+var hyp = function hyp(x,y) {
+  return Math.sqrt(x*x + y*y);
+};
+
+var test2 = function test2() {
+  let k = 0;
+  let j = 0;
+  mM4.ret({});
+  for (j=0; j<101; j+=1) {
+    for (k=0; k<50000; k+=1) {
+      mMZ7.block().bnd(() => mM4
+      .bnd(addObj, j, [j,k]))
+      mM3.bnd(next, ((hyp(j,k) - Math.floor(hyp(j,k))) === 0), mMZ7)
+    }
+  }
+  return mM4.x;
+}
+
 var doub = function doub(v) {
   let mon = new Monad(v + v);
   return mon;
