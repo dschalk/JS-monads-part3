@@ -6,17 +6,21 @@ var Group = 'solo';
 var Name = 'Fred';
 
 const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
-    constructor(z) {
+    constructor(z,g) {
 
       this.x = z;
+      if (arguments.length === 1) {this.id = 'anonymous'}
+      else {this.id = g}
 
       this.bnd = (func, ...args) => {
-        return func(this, ...args);
+        func(this.x, ...args);
       };
 
       this.ret = a => {
-        this.x = a;
-        return this;
+        var str = this.id
+        if (str === 'anonymous') {return new Monad(a,'anonymous')};
+        eval(str + '= new Monad(a,' + "str" + ')'); 
+        return window[this.id];
       };
 
       this.fmap = (f, mon = this, ...args) => {      
@@ -33,70 +37,32 @@ const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
 
       this.x = z;
       this.id = g;
+      this.flag = false;
       this.p = [];
 
       this.block = () => {
-        this.x = true;
+        this.flag = true;
         return this;
         }
 
       this.release = () => {
-        this.x = false;
         let self = this;
         let p = this.p;
-
-        if (p[1] === 'bnd') {
-          p[2](self.x, self, ...p[3]);
-
-          return self;
-        }
-
-        if (p[1] === 'ret') {
-          self.x = p[2];
-          return self;
-        }
-
-        if (p[1] === 'fmap') { 
-          p[3].ret(p[2](p[3].x, ...p[4]));
-          return p[3];
-        }
-     }
-
+        p[1](self.x, ...p[2]);
+        self.flag = false;
+        return self;
+      }
+ 
       this.bnd = (func, ...args) => {
         let self = this;
-        if (self.x === false) {
-          func(self, ...args);
+        if (self.flag === false) {
+          func(self.x, ...args);
           return self;
         }
-        if (self.x === true) {
-          self.p = [self.id, 'bnd', func, args];
+        if (self.flag === true) {
+          self.p = [self.id, func, args];
           return self;
         }
-      }
-
-      this.fmap = (f, mon = this, ...args) => {   
-        let self = this;
-          if (self.x === false) {
-            mon.ret(f(mon.x,  ...args));
-            return mon;
-          }
-          if (self.x === true) {
-            self.p = [self.id, 'fmap', f, mon, args];
-            return self;
-          }
-      }
-
-      this.ret = a => { 
-        let self = this;
-          if (self.x === false) {
-            self.x = a;
-          }
-          if (self.x === true) {
-          self.p = [self.id, 'ret', a];
-          return self;
-          }
-        this.x = false;
-        return this;
       }
     }
   }
@@ -139,11 +105,12 @@ function updateOp(e) {
   updateCalc();
 }
 
-function updateCalc() {  
-  if ((mM8.x === 0) || (mM3.x.length !== 2)) {return};
+function updateCalc() { 
+  READY = 0;
+  console.log('IN updateCalc');
   monadStyle = inputStyleB;
   chatStyle = inputStyleA;
-  mM19.bnd(() => (
+  ret('start').bnd(() => (
       ( mMZ2.block()
                     .bnd(() => mM14
                     .ret('Score: ' + (mM13.x + 1))
@@ -176,22 +143,21 @@ function updateCalc() {
                     .bnd(score,-25)
                     .bnd(newRoll)))) ),     
        (mM3
-                    .bnd(toFloat)
-                    .bnd(() => mM7
-                    .fmap(() => {return calc(mM3.x[0], mM8.x, mM3.x[1])})
-                    .bnd(() => mM1.bnd(push, mM7.x)
-                    .bnd(clean)
+                    .bnd(x => mM7.ret(calc(x[0], mM8.x, x[1]))
+                    .bnd(x => mM1.bnd(push, x).bnd(x => mM1.ret(x))
+                    .bnd(clean).bnd(x => mM1.ret(x))
                     .bnd(next, (mM7.x == 18), mMZ4)
                     .bnd(next, (mM7.x == 20), mMZ2) 
                     .bnd(next, ((mM7.x == 20 || mM7.x == 18) && (mM13.x % 5) === 0), mMZ5) 
                     .bnd(next, (mM13.x == 25), mMZ6)
-                    .bnd(displayOff, mM1.x.length)
+                    .bnd(displayOff, (mM1.x.length+''))
                     .bnd(() => mM3
                     .ret([])
                     .bnd(() => mM4
                     .ret(0).bnd(mM8.ret)
                     .bnd(() => mM5.ret('Done')
-                    .bnd(update)   ))))) ) )) 
+                    .bnd(update)   ))))) )
+  )) 
 }
 
 var newRoll = function(x,mon) {
@@ -207,26 +173,52 @@ const send = h('pre', {style: {color: '#AFEEEE' }},
 );  
 
 const messages1 = h('pre', {style: {color: '#AFEEEE' }}, 
-`  var updateChildren = function updateMessages(x,mon,mon2) {  
-  mon.ret([]);
-  let ar = mon2.x;
-  let keys = Object.keys(ar);
-  for (let k in keys) {
-    mon.bnd(push, ar[k])
-    .bnd(push, h('br'));
-  }
-  return mon;
-}
+`  
+  case "CB#$42":  // Updates the scoreboaard.
+    let scores = extra.split("<br>");
+    mMscbd.ret(scores)
+    .bnd(updateScoreboard)
+    .bnd(update); 
+  break;
+
+  case "CD#$42":  // Updates the message display.
+    gameArray.splice(0,3);
+    let message = gameArray.reduce((a,b) => a + ", " + b)
+    let str = sender + ': ' + message;
+    mMmsg
+    .bnd(push,str)
+    .bnd(updateMessages)
+    .bnd(update);
+  break;
 `
 );  
 
 const messages2 = h('pre', {style: {color: '#AFEEEE' }}, 
-`  mMmsg
-  .bnd(push,str)
-  .bnd( () => mMmessage
-  .bnd(updateChildren,mMmsg)
-  .bnd(update) );
-
+` 
+  var updateScoreboard = function updateScoreboard(v) {
+    mMscoreboard.ret([]);
+    let ar = mMscbd.x;
+    let keys = Object.keys(ar);
+    for (let k in keys) {
+      mMscoreboard.bnd(unshift, ar[k])
+      .bnd(unshift, h('br'));
+    }
+      mMscoreboard.bnd(unshift, h('br'))
+      .bnd(unshift, h('br'))
+      .bnd(unshift,'player [score] [goals]')
+    return mMscoreboard;
+  }
+  
+  var updateMessages = function updateMessages(v) {
+    mMmessages.ret([]);
+    let ar = mMmsg.x;
+    let keys = Object.keys(ar);
+    for (let k in keys) {
+      mMmessages.bnd(unshift, ar[k])
+      .bnd(unshift, h('br'));
+    }
+    return mMmessages;
+  }
 `
 );  
 
@@ -275,33 +267,34 @@ const numbers3 = h('pre', {style: {color: '#AFEEEE' }},
 
 
 const pause = h('pre', {style: {color: '#AFEEEE' }}, 
-`  var pause = function(x,mon,t,mon2) {   
-     mon2.block();
-     let time = t*1000;
-     setTimeout( function() {
-       mon2.release();
-     },time );
-     return mon;
-  }  `
+`  var pause = function(x,t,mon2) {
+    mon2.block();
+    let time = t*1000;
+    setTimeout( function() {
+      mon2.release();
+    },time );
+    return mon2;
+  };
+`
 );
 
 const pauseDemo = h('pre', {style: {color: '#AFEEEE' }}, 
-`  mM1.ret("Wait two seconds")
-    .bnd(pause,2,mMI1)
-    .bnd(() => mMI1
-    .bnd(() => mM2.ret("Hello")
-    .bnd(() => mM3.ret(3)
-    .bnd(mM4.ret)
-    .bnd(cube)
-    .bnd(() => mM1.ret("Goodbye")
-    .bnd(update)))))  `
+`  function updatePauseDemo() {
+    mM1.ret("Wait two seconds.")
+      .bnd(update)
+      .bnd(pause,2,mMZ1)
+      .bnd(() => mM1.ret("Goodbye")
+      .bnd(update)))
+  }
+`
 );  
 
-const nex = h('pre', {style: {color: '#AFEEEE' }}, 
-`  var next = function next(x,mon,bool,mon2) {
+const next = h('pre', {style: {color: '#AFEEEE' }}, 
+`  var next = function next(x,bool,mon2) {
     if (bool) {
       mon2.release();
     }
+    let mon = new Monad(x);
     return mon
   }  `
 );  
@@ -315,7 +308,7 @@ const updateNext = h('pre', {style: {color: '#AFEEEE' }},
 );  
 
 
-export default {monad, monadIter, steps, dice, send, nex, updateNext, 
+export default {monad, monadIter, steps, dice, send, next, updateNext, 
   pause, pauseDemo, messages1, messages2, messages3, numbers, numbers2, numbers3};
 
 

@@ -11,20 +11,29 @@ var DS_T = 8000;
 var SETINTERVAL = true;
 var READY = 0;
 
-var updateChildren = function updateMessages(v,mon,mon2) {
-  mon.ret([]);
-  let ar = mon2.x;
+var updateScoreboard = function updateScoreboard(v) {
+  mMscoreboard.ret([]);
+  let ar = mMscbd.x;
   let keys = Object.keys(ar);
-  let l = keys.length;
   for (let k in keys) {
-    mon.bnd(unshift, ar[k])
+    mMscoreboard.bnd(unshift, ar[k])
     .bnd(unshift, h('br'));
   }
-  if (mon == mMscoreboard) {
-    mon.bnd(unshift, h('br'))
+    mMscoreboard.bnd(unshift, h('br'))
+    .bnd(unshift, h('br'))
     .bnd(unshift,'player [score] [goals]')
+  return mMscoreboard;
+}
+
+var updateMessages = function updateMessages(v) {
+  mMmessages.ret([]);
+  let ar = mMmsg.x;
+  let keys = Object.keys(ar);
+  for (let k in keys) {
+    mMmessages.bnd(unshift, ar[k])
+    .bnd(unshift, h('br'));
   }
-  return mon;
+  return mMmessages;
 }
 
 function createWebSocket(path) {
@@ -64,29 +73,18 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
     [ h('div', [
       h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}, on: {click: updateFocus}}, 'Game/Chat'  ),
     ] ),
-      h('h1', {style: {textAlign: 'center', color: '#ffba66'}}, 'Websockets Monads Part 2'),
+      h('h1', {style: {textAlign: 'center', color: '#ffba66'}}, 'JS-monads-part3'),
       h('br'),  
       h('span', 'This is the third page in the new Javascript Monads series. Links to the detailed explanations of the basic monad constructor, "Monad" and its methods and the arguments they take can be found at '),
-      h('a', {props: {href: 'http://schalk.net:4001' },  style: {color: '#EECCFF'}},' http://schalk.net:4001'), 
-      h('span', ' and a code repo at '),
-      h('a', {props: {href: 'https://github.com/dschalk/fun-with-monads'}, style: {color: '#EECCFF'}}, ' github repo' ),
-      h('span', ' The original site, which was largely exploratory, is at: '  ),
-      h('a', {props: {href: 'http://transcendent.ninja' },  style: {color: '#EECCFF'}},' http://transcendent.ninja'), 
-      h('span', ' Links to all of the online demos can be found at: '  ),
       h('a', {props: {href: 'http://schalk.net' },  style: {color: '#EECCFF'}},' http://schalk.net'), 
       h('span', ' and a code repo at '),
-      h('a', {props: {href: 'https://github.com/dschalk/javascript-monads'}, style: {color: '#EECCFF'}}, ' repo' ),
-      h('span', '. The older site functions well, but it was bloated and unwieldy with React. I say "bloated" because I didn\'t need most of its core features. I didn\'t even use the state object and frequently called React.forceUpdate. Now I am at peace, using the '  ),
-      h('a', {props: {href: 'https://github.com/paldepind/snabbdom' },  style: {color: '#EECCFF'}},' snabbdom library. '), 
-      h('h2', {style: {textAlign: 'center', color: '#ffba66'}}, 'Why I Call Them "Monads"' ),
-      h('p', 'Since the Monad and MonadIter instances are uniquely determined by their values (m.x for all monads m), and the values can be any value the is legal in ES6, it is immediately clear that there is a one to one correspondence between the infinite sets of all possible monads and all possible ES6 values, including primitives, arrays, functions, etc. The method "bnd" in combination with functions of the form f = (v,mon) => {alter the values of monads; return a monad } seem to obey the Haskell monad laws. The method "ret" makes any Javascript value into a monad with that value, and "ret"  is the left and right identity. Chains of monad operations using the bnd method are commutative; that is, m.bnd(f).bnd(g) is equivalent to m.bnd(x => f(g(x)). For example, "mM3.bnd(x => cube(x, add(x, mM3, 3))) === mM3.bnd(add,3).bnd(cube)" returns "true". Note that when we use "add" as a stand-alone function rather than an argument in the "bnd" method, we have to explicitly specify the value and the monad upon which add operates. ' ),
-      h('p', 'But "bnd" accepts arguments that do more than facilitate mapping among monads. It will accept functions of the type f = (v,mon) {do anything that can be done in ES6; return mon }. if mM1.x === 3, mM2.x === 4, and mM3.x === 0 (or anything else), after "mM1.bnd(() => cube(mM2.x, mM3))", mM1 and mM2 are unchanged, but mM3.x === 64. Monad methods can return ordinary values. For example, "bnd" with an ordinary function or a lambda leaves the calling monad unchanged, but returns the return value of the function operating on the monad\'s value. So mM1.bnd(_ => 52) leaves mM1 unchanged and returns 52, and  mM1.bnd(x => x*x) + 33 === 42 is true. So while the set of all possible instances of Monad and MonadIters along with the isomorphisms mapping them to one another might constitute a monad, the methods "bnd", "fmap", and "ret" are not restricted to taking only arguments that map within that set. '  ),
-      h('p', 'This project is not about mathematics, it is about organizing and streamlining code. The monad values displayed in the right column sometimes provide are there for demonstrations, but they can also provide instant debugging information. The values of all of the monads can be found by typing them in the browser console since they are provided by a script designated in index.html, rather than a module. These entities which I am calling "monads" are versitile and rebust, and they function well in chains, propagating values from link to link as far as they are needed and always having access to one another. They facilitate the writing of easy-to-understand and modify asynchronous code. I\'ll present a monad that propagates errors, kind of like the Haskell Maybe monad only without types. By the way, speaking of Haskell, if I modified monads by replacing m.x rather than mutating, which would require only a minor adjustment, the monads would be pure in the sense that Haskell MVar instances are pure. MVar instances\' values are removed and replaced, but the MVar instances are said to be immutable. That sort of thinking suggests that Javascript objects don\'t mutate when their attributes and methods come, go, and mutate. '  ), 
-      h('p' ),
-      h('h2', {style: {textAlign: 'center', color: '#ffba66'}}, 'MonadIter' ),
-      h('p', 'The basic monad is shown and demonstrated elsewhere. It is also in a script named "monad.js" in the "index.html" file, so you can experiment with the monads in the browser consol. Here is the other constructor in this project: '  ),
+      h('a', {props: {href: 'https://github.com/dschalk?tab=repositories'}, style: {color: '#EECCFF'}}, ' github repos' ),
+      h('p', 'This project is not about mathematics, it is about organizing and streamlining code. The monad values displayed in the right column are there for demonstrations, but they can also provide instant debugging information. The values of all of the monads can be found by typing them in the browser console since they are provided by a script specified in index.html. These entities which I am calling "monads" are versitile and rebust, and they function well in chains, propagating values from link to link as far as they are needed and always having access to one another. They facilitate the writing of easy-to-understand and modify asynchronous code. And they do obey a Javascript equivalent of the Haskell monad laws, with stand-alone "ret" being the left and right identity and commutivity; that is, the order of evaluation in sequences does not affect the result.'  ), 
+      h('p', 'Here is the basic monad constructor: ' ),
+      cow.monad,
+      h('p', 'And here is MonadIter: ' ),
       cow.monadIter,
-      h('p', { props: { id: 'signin' }}, 'As a refresher, Click the following button to execute the indicated code, then click the mMZ2.release() button four times.'  ),
+      h('p', { props: { id: 'signin' }}, 'To see a simple use of MonadIter, clickk the following button and then click the mMZ2.release() button four times.'  ),
       h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: updateSteps }, style: style4},
             [ cow.steps ],  ),
       h('p', {props: {id: 'rules'}}, ),    
@@ -123,32 +121,27 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
       h('p', {style: {color: '#EEBBBB'}}, 'RULES: You get one goal for reaching the number 25. Here\'s how you get there: Every time you compute the number 20, mM13.x (your score) gets incremented by 1. Every time you compute "18", your score increases by 3. Every time your score becomes 0 mod 5 (-5, 0, 5, 10, 15, ...) you get 5 more points. When you click ROLL you lose one point. Wheover has the most goals after five minutes wins.' ),
       h('p', 'HINTS: The best way to get off to a good start is to click ROLL and then score 1 point by making the number 20. Score = 5! You hit 0 and got 5 points. You can use the same technique when you reach 5, 10, 15, and 20. Click ROLL when you are at twenty, then compute 20 to get a point, and you jump to 25. Goal! But you can\'t get to 25 from 24. Computing 20 jumps you all the way to 30. No goal; your score has to be exactly 25. '  ),
         
-h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectively. They call updateCalc. updateCalc (below) clearly displays the flow of the application. First, mMZ2 and mMZ4 get locked, acquiring the code that might eventually get executed in their "p" attribute arrays. Then, in the third part of the tupple, tests are performed that might release the code being held in mMZ2 and mMZ4. "send" requests a new dice roll from the server. ' ),
-      h('p', 'We could have substituted ordinary callbacks for the blocked MonadIter instances and called them when the test conditions were met. Indeed, we could dispense with the monads altogether. But, at no significant cost in browser resources, the code is neatly organized and easy to reason about. ' ),
-      h('p', 'The one gotcha that might have caused the code to fail on the first run is the order of three parts of the tupple. The tests in part 3 are run after mMZ2 and mMZ4 have acquired the code that didn\'t run. Had the code in part three been placed in part one, mMZ2.release() and mMZ4.release() would have no code to execute in their p attributes. Here is the code:'  ),
+h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectively. They call updateCalc. updateCalc (below) clearly displays the flow of the application. First, mMZ2 and mMZ4 get locked, acquiring the code that might eventually get executed in their "p" attribute arrays. Then, in the third part of the tupple, tests are performed that might release the code being held in mMZ2 and mMZ4. "send" requests a new dice roll from the server. Here is the code:' ),
       cow.dice,
       h('p', 'When numbers are clicked, they get pushed into mM3.x, an initially empty array. When an operator is clicked, it replaces "0" as the value of mM8. So when mM3.x.length === 2 and mM8.x !== 0, it is time for the computation to go forward. '  ),
-      h('p', 'mM1 holdd the initial dice roll and the subsequent arrays of available numbers. When calc returns "20", the player get an additional point and a new roll of the dice. If calc returns 18, you get three points. '   ),
+      h('p', 'mM1 holds the initial dice roll and the subsequent arrays of available numbers. When calc returns "20", the player get an additional point and a new roll of the dice. If calc returns 18, the player gets three points. A result of n modulo 5 gains a player five points. A result of 25 add one goal and re-sets the score to zero.'   ),
    h('p', 'MonadIter instances together with the function "pause" provide a way to delay progress along a chain. "pause" is defined as follows:'),
         cow.pause, 
-   h('p', 'If you click the button below, some monads will update four seconds later. '  ),
+   h('p', 'If you click the button below, some monads will update two seconds later. '  ),
    h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: updatePauseDemo }, style: style4},
             [ cow.pauseDemo ],  ),
-      h('p', 'The functions provided to bind are simple. They perform a task, and then return a monad so the chain can continue. The method "fmap" takes ordinary functions and assigns the return value to the calling monad.  m.fmap(f) assigns f(m.x) to m; in other words, m.x === f(m.x\') where x\' is the previous value of m.  Using ordinary functions with bnd does not modify the calling monad, but it does compute values using either the calling monad\'s value or a value provided in the argument provided to bnd. For example, "mM1.bnd(() => cu(2)) + mM1.bnd(cu) === 54 and mMx === 3 where cu = function cu(x) {return x*x*x}. I don\'t have an example in which there would be any advantage in using bnd with an ordinary function. I like the robustness of bnd as it is, but if bnd took only the functions specifically made for it, inadvertent use of ordinary functions as arguments would return a helpful error message. Still, I don\'t plan to restrict the functions bnd can accept as arguments. '  ),
+      h('p', 'The functions provided to bind are simple. They perform a task, and then return a monad so the chain can continue. The method "fmap" takes ordinary functions which operates on the calling monad\'s value and returns a new monad with the calling monad\s identifier (variable name).  m.fmap(f) assigns f(m.x) to a new monad named "m". Using ordinary functions with bnd does not modify the calling monad, but it does compute values using either the calling monad\'s value or a value provided in the argument provided to bnd.  '  ),
       h('p', 'Using "bnd" with "next", any monad can release any block. At any link, a chain of monads can divide into 2, 3, or any number of chains going there separate ways but still communicating with one another. Large applications can be organized into a single tree. '  ),
-      h('div', 'When you log in, the monad column on the right disappears and a scoreboard and chat section open up. You can\'t compete or chat as long as you remain in the default group "solo", even if other people are in group "solo". But if you change to, say, group "chat54" in two separate browser windows, you will see that both windows share rolls of the dice and chat messages they enter. People in separate locations can agree on a group name and compete and chat. If the name is cryptic, something like "c#*&%@@9J#lu88", the chat and the game will likely remain private. If you change to group "test", you might encounter me fine tuning this page, or maybe someone else looking for company by changing to group "test".  '  ),
+      h('div', 'When you log in, the monad column on the right disappears and a scoreboard and chat section open up. You can\'t compete or chat as long as you remain in the default group "solo", even if other people are in group "solo". But if you change to, say, group "chat54" in two separate browser windows, you will see that both windows share rolls of the dice and chat messages they enter. People in separate locations can agree on a group name and compete and chat. If the name is cryptic, something like "c#*&%@@9J#lu88", the chat and the game will likely remain private. If you change to group "test", you might encounter me mucking about on this page, or maybe someone else looking for company by changing to group "test".  '  ),
       h('span', {style: inputStyle1}, 'You will need a socket in order to participate in chats and play the game. A socket is created when you log in. '  ),
       h('br'),
       h('span',  {style: inputStyle1}, 'Enter some name here: ' ),  
       h('input', {style: inputStyle1, on: {keydown: updateLogin},  } ),
       h('h2', {style: {textAlign: 'center', color: '#ffba66'}}, 'Dynamic List Display' ),
-      h('p', 'The lists of group members and their scores, and the lists of messages broadcast within each group, are subject to change as scores change and players join or leave the group, and as messages get sent and broadcast to the group. When a group member\'s score changes and when a group member sends a message, the information goes to the server and the server broadcasts the updated state (maintained in a Haskell TMVar) to all group members. In socket.onmessage, the incoming messages are sorted according to their prefixes in a switch block and the following function is called: ' ),
+      h('p', 'The lists of group members and their scores, and the lists of messages broadcast within each group, are subject to change as scores change and players join or leave the group, and as messages get sent and broadcast to the group. When a group member\'s score changes and when a group member sends a message, the information goes to the server and the server broadcasts the updated state (maintained in a Haskell TMVar) to all group members. In socket.onmessage, the incoming messages are sorted according to their prefixes in a switch block and if the message is a scoreboard update or chat message, one of the following functions is called: ' ),
       cow.messages1,
-      h('p', 'x is just a place holder needed in the bnd method. If the incoming message is a chat message, the reserved monads mMmsg and mMmessages perform as follow: '  ),
+      h('p', 'And here are the functions which get called: '  ),
       cow.messages2, 
-      h('p', 'When a chat message comes in, mMmsg updates itself with the new message and then hands over processing to mMmessages. mMmessages then calls updateChildren with its bnd method, designating mMmsg as the text source, and then calls .bnd(update). That\'s all there is to it. The array mMmessages.x sits quietly in view() as an array of children of its parent div. '  ),
-      h('p', 'Similarly, the scoreboard is updated by: '  ),
-      cow.messages3,
       h('h2', {style: {textAlign: 'center', color: '#ffba66'}}, 'Using MonadIter In Large Computations' ),
       h('p', 'MonadIter can be used to filter results while computations are in progress. For example, suppose I wanted to know if every integer x between 0 and 100 has a counterpart y between 0 and 10,000 such that the square root of x*x + y*y is a whole number. 3 has 4 since the square root of 3*3 + 4*4 is 25, but what about 17, or 95? ' ),
       h('p', 'here is a function for computing the hypotenuse of a right triangle: ' ),
@@ -296,24 +289,26 @@ function update0() {
   oldVnode = patch(oldVnode, newVnode());
 }
 
-var score = function(v,mon,j) {
+var score = function(v,j) {
   let k = 0;
   if (mM13.x == 25) {k = 1};
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + k);
+  let mon = new Monad(v);
   return mon;
 }
 
-var newRoll = function(v,mon) {
+var newRoll = function(v) {
   socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
+  let mon = new Monad(v);
   return mon;
 };
 
-function updateCalc() {  
+function updateCalc() { 
   READY = 0;
   console.log('IN updateCalc');
   monadStyle = inputStyleB;
   chatStyle = inputStyleA;
-  mM19.bnd(() => (
+  ret('start').bnd(() => (
       ( mMZ2.block()
                     .bnd(() => mM14
                     .ret('Score: ' + (mM13.x + 1))
@@ -346,16 +341,14 @@ function updateCalc() {
                     .bnd(score,-25)
                     .bnd(newRoll)))) ),     
        (mM3
-                    .bnd(toFloat)
-                    .bnd(() => mM7
-                    .fmap(() => {return calc(mM3.x[0], mM8.x, mM3.x[1])})
-                    .bnd(() => mM1.bnd(push, mM7.x)
-                    .bnd(clean)
+                    .bnd(x => mM7.ret(calc(x[0], mM8.x, x[1]))
+                    .bnd(x => mM1.bnd(push, x).bnd(x => mM1.ret(x))
+                    .bnd(clean).bnd(x => mM1.ret(x))
                     .bnd(next, (mM7.x == 18), mMZ4)
                     .bnd(next, (mM7.x == 20), mMZ2) 
                     .bnd(next, ((mM7.x == 20 || mM7.x == 18) && (mM13.x % 5) === 0), mMZ5) 
                     .bnd(next, (mM13.x == 25), mMZ6)
-                    .bnd(displayOff, mM1.x.length)
+                    .bnd(displayOff, (mM1.x.length+''))
                     .bnd(() => mM3
                     .ret([])
                     .bnd(() => mM4
@@ -391,6 +384,26 @@ function updateFocus() {
   signinFocus = {autofocus: true};
   update0();
 }
+
+var displayOff = function displayOff(x,a) {
+  console.log('a, typeof a: ',a,typeof a)
+    document.getElementById(a).style.display = 'none';
+    let mon = new Monad(x);
+    return mon;
+};
+
+var displayInline = function displayInline(x,a) {
+  console.log('x, a ', x, a);
+    document.getElementById(a).style.display = 'inline';
+    let mon = new Monad(x);
+    return mon;
+};
+
+var displayBlock = function displayBlock(x,a) {
+    document.getElementById(a).style.display = 'block';
+    let mon = new Monad(x);
+    return mon;
+};
 
 function updateNumbers() {
   linkStyle2 = style2;
@@ -465,7 +478,7 @@ function rollDice() {
   },1000 );
 }
 
-function rollD(v,mon) { 
+function rollD(v) { 
   DS_T = 8000;
   if (SETINTERVAL) {
     setInterval( function() {
@@ -478,6 +491,7 @@ function rollD(v,mon) {
     },1000 );
   }
   SETINTERVAL = false;
+  let mon = new Monad(v);
   return mon;
 }
 
@@ -500,14 +514,8 @@ function updatePauseDemo() {
   mM1.ret("Wait two seconds.")
     .bnd(update)
     .bnd(pause,2,mMZ1)
-    .bnd(() => mMZ1
-    .bnd(() => mM2.ret("Hello")
-    .bnd(() => mM3.ret(3)
-    .bnd(mM4.ret)
-    .bnd(cube)
     .bnd(() => mM1.ret("Goodbye")
-    .bnd(update)))))
-  oldVnode = patch(oldVnode, newVnode());
+    .bnd(update))
 }
 
 function updateGroup(e) {
@@ -624,23 +632,21 @@ socket.onmessage = function(event) {
           case "CE#$42":                             // Updates numbers during play.
           break;
 
-          case "CB#$42":                               // Updates the scoreboaard.
+          case "CB#$42":  // Updates the scoreboaard.
             let scores = extra.split("<br>");
             mMscbd.ret(scores)
-            .bnd( () => mMscoreboard
-            .bnd(updateChildren,mMscbd)
-            .bnd(update) )
+            .bnd(updateScoreboard)
+            .bnd(update); 
           break;
 
-          case "CD#$42":
+          case "CD#$42":  // Updates the message display.
             gameArray.splice(0,3);
             let message = gameArray.reduce((a,b) => a + ", " + b)
             let str = sender + ': ' + message;
             mMmsg
             .bnd(push,str)
-            .bnd( () => mMmessages
-            .bnd(updateChildren,mMmsg)
-            .bnd(update) );
+            .bnd(updateMessages)
+            .bnd(update);
           break;
 
 
@@ -1044,11 +1050,12 @@ function updateRl(event) {
   oldVnode = patch(oldVnode, newVnode());
 }
 
-var update = function update(v,mon) {
+var update = function update(v) {
   const newVnode = view(mM1.x, mM2.x, mM3.x, mM4.x, mM5.x, mM6.x, mM7.x, mM8.x, mM9.x,
   mM10.x, mM11.x, mM12.x, mM13.x, mM14.x, mM15.x, mM16.x, mM17.x, 
   mM18.x, mM19.x, mMZ1.x, mMZ2.x, mMZ3.x, mMZ4.x, mMZ5.x, mMZ6.x, mMZ7.x, mMZ8.x, mMZ9.x);
   oldVnode = patch(oldVnode, newVnode);
+  let mon = new Monad(v);
   return mon;
 }
 
