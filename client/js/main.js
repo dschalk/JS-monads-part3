@@ -332,7 +332,7 @@ function updateCalc() {
                     .bnd(() => mM3
                     .ret([])
                     .bnd(() => mM4
-                    .ret(0).bnd(mM8.ret)
+                    .ret(0).bnd(mM8.ret).bnd(mM7.ret)
                     .bnd(() => mM5.ret('Done')
                     .bnd(update)   ))))) )
   )) 

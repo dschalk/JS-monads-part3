@@ -20,7 +20,7 @@ var Name = 'Fred';
 
 var monad = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class Monad {\n    constructor(z,g) {\n\n      this.x = z;\n      if (arguments.length === 1) {this.id = \'anonymous\'}\n      else {this.id = g}\n\n      this.bnd = (func, ...args) => {\n        func(this.x, ...args);\n      };\n\n      this.ret = a => {\n        var str = this.id\n        if (str === \'anonymous\') {return new Monad(a,\'anonymous\')};\n        eval(str + \'= new Monad(a,\' + "str" + \')\'); \n        return window[this.id];\n      };\n\n      this.fmap = (f, mon = this, ...args) => {      \n        mon.ret( f(mon.x, ...args));\n        return mon;\n\n      };\n    }\n  };\n');
 
-var monadIter = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class MonadIter {\n    constructor(z,g) {\n\n      this.x = z;\n      this.id = g;\n      this.flag = false;\n      this.p = [];\n\n      this.block = () => {\n        this.flag = true;\n        return this;\n        }\n\n      this.release = () => {\n        let self = this;\n        let p = this.p;\n        p[1](self.x, ...p[2]);\n        self.flag = false;\n        return self;\n      }\n \n      this.bnd = (func, ...args) => {\n        let self = this;\n        if (self.flag === false) {\n          func(self.x, ...args);\n          return self;\n        }\n        if (self.flag === true) {\n          self.p = [self.id, func, args];\n          return self;\n        }\n      }\n    }\n  }\n');
+var monadIter = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  \n  class MonadIter {\n    constructor(z,g) {\n\n      this.x = z;\n      this.id = g;\n      this.flag = false;\n      this.p = [];\n\n      this.block = () => {\n        this.flag = true;\n        return this;\n        }\n\n      this.release = () => {\n        let self = this;\n        let p = this.p;\n        p[0](self.x, ...p[1]);\n        self.flag = false;\n        return self;\n      }\n \n      this.bnd = (func, ...args) => {\n        let self = this;\n        if (self.flag === false) {\n          func(self.x, ...args);\n          return self;\n        }\n        if (self.flag === true) {\n          self.p = [func, args];\n          return self;\n        }\n      }\n    }\n  }\n');
 
 var steps = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  function updateSteps(event) {\n     mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)\n     .bnd(() => mM1.ret(\'Click the mMI2.release() button to proceed\')\n     .bnd(() => mMI2.block()\n     .bnd(() => mM2.ret(\'Click it again.\')\n     .bnd(() => mMI2.block()\n     .bnd(() => mM3.ret(\'Keep going\')\n     .bnd(() => mMI2.block()\n     .bnd(() => mM4.ret(\'One more\')\n     .bnd(() => mMI2.block()\n     .bnd(() => mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret)\n     .bnd(mM4.ret)\n      ))))))))) \n     oldVnode = patch(oldVnode, newVnode());\n  }  ');
 
@@ -187,7 +187,7 @@ function updateCalc() {
           return mM1.ret(x);
         }).bnd(next, mM7.x == 18, mMZ4).bnd(next, mM7.x == 20, mMZ2).bnd(next, (mM7.x == 20 || mM7.x == 18) && mM13.x % 5 === 0, mMZ5).bnd(next, mM13.x == 25, mMZ6).bnd(displayOff, mM1.x.length + '').bnd(function () {
           return mM3.ret([]).bnd(function () {
-            return mM4.ret(0).bnd(mM8.ret).bnd(function () {
+            return mM4.ret(0).bnd(mM8.ret).bnd(mM7.ret).bnd(function () {
               return mM5.ret('Done').bnd(update);
             });
           });

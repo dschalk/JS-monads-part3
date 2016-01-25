@@ -32,7 +32,8 @@ const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
   };
 ` );  
   
-const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
+const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  
+  class MonadIter {
     constructor(z,g) {
 
       this.x = z;
@@ -48,7 +49,7 @@ const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
       this.release = () => {
         let self = this;
         let p = this.p;
-        p[1](self.x, ...p[2]);
+        p[0](self.x, ...p[1]);
         self.flag = false;
         return self;
       }
@@ -60,7 +61,7 @@ const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
           return self;
         }
         if (self.flag === true) {
-          self.p = [self.id, func, args];
+          self.p = [func, args];
           return self;
         }
       }
