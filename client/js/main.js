@@ -7,9 +7,6 @@ import h from 'snabbdom/h';
 var Group = 'solo';
 var afocus = {autofocus: false};
 var signinFocus = {autofocus: false};
-var DS_T = 8000;
-var SETINTERVAL = true;
-var READY = 0;
 
 var updateScoreboard = function updateScoreboard(v) {
   mMscoreboard.ret([]);
@@ -67,7 +64,6 @@ var oldVnode = document.getElementById('placeholder');
 
 function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, 
                 m12, m13, m14, m15, m16, m17, m18, m19, mI1, mI2, mI3, mI4, mI5, mI6, mI7, mI8, mI9) { 
-      console.log('READY: ', READY);
   return h('div',{style: style3}, 
    [  h('div',{style: { width: '60%', textAlign: 'left', marginLeft: 40, marginRight: '17%', fontSize: '20px'}}, 
     [ h('div', [
@@ -117,21 +113,19 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
                      `ROLL`   ),
       h('p', {style: styleRoll}, 'Now click ROLL. '  ),
       h('p', 'When you click a number, it disappears. After two numbers and an operator have been selected, in any order, a computation is performed and the result is placed at the end of the numbers row. Now there are three numbers. After another round, two are left and finally, the last computation can be performed. ',  ),
-      h('p', 'You can click ROLL repeatedly and the Haskell server will obligingly provide new numbers. The numbers simulate the roll of four dice; two six-sided, one twelve-sided, and one twenty-sided. '  ),
-      h('p', {style: {color: '#EEBBBB'}}, 'RULES: You get one goal for reaching the number 25. Here\'s how you get there: Every time you compute the number 20, mM13.x (your score) gets incremented by 1. Every time you compute "18", your score increases by 3. Every time your score becomes 0 mod 5 (-5, 0, 5, 10, 15, ...) you get 5 more points. When you click ROLL you lose one point. Wheover has the most goals after five minutes wins.' ),
-      h('p', 'HINTS: The best way to get off to a good start is to click ROLL and then score 1 point by making the number 20. Score = 5! You hit 0 and got 5 points. You can use the same technique when you reach 5, 10, 15, and 20. Click ROLL when you are at twenty, then compute 20 to get a point, and you jump to 25. Goal! But you can\'t get to 25 from 24. Computing 20 jumps you all the way to 30. No goal; your score has to be exactly 25. '  ),
+      h('p', 'You can click ROLL repeatedly and the Haskell server will obligingly provide new numbers. The numbers simulate the roll of four dice; two six-sided, one twelve-sided, and one twenty-sided. Clicking ROLL forfeits one point, but this can be advantageous, as when it places you within 1 or 3 points from a multiple of 5 (and a 5 point jump to the next multiple of 5).  '  ),
+      h('p', {style: {color: '#EEBBBB'}}, 'RULES: You get one goal for reaching the number 25. Here\'s how you get there: Every time you compute the number 20, mM13.x (your score) gets incremented by 1. Every time you compute "18", your score increases by 3. Every time your score becomes 0 mod 5 (-5, 0, 5, 10, 15, ...) you get 5 more points. When you click ROLL you lose one point. The first player to score 3 goals wins.' ),
+      h('p', 'HINTS: The best way to get off to a good start is to click ROLL and drop your score down to -1. Then if you score 1 point you hit zero and jump to 5. If you score 18 twice in a row you got to 2 and then jump from 5 to 10. A score of 10 in three computations! There are only two ways to score a goal. Either compute 18 when your score is 17, or compute 20 when your score is 19. You can\'t get to 25 from 22 or 24 because you get one, and only one jump when you hit a multiple of 5. Computing 20 jumps you to 25. Computing 25 jumps you to 30. No goal; your score isn\'t 25. '  ),
         
-h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectively. They call updateCalc. updateCalc (below) clearly displays the flow of the application. First, mMZ2 and mMZ4 get locked, acquiring the code that might eventually get executed in their "p" attribute arrays. Then, in the third part of the tupple, tests are performed that might release the code being held in mMZ2 and mMZ4. "send" requests a new dice roll from the server. Here is the code:' ),
+h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectively. They call updateCalc. updateCalc (below) clearly displays the flow of the application. First, mMZ2, mMZ4, mMZ5, and mMZ6 get locked, storing the code that might eventually get executed in their "p" attribute arrays. Then, in the third part of the tupple, tests are performed that might release the code being held in the four MonadIter instances. Here is some of the operative code:' ),
       cow.dice,
-      h('p', 'When numbers are clicked, they get pushed into mM3.x, an initially empty array. When an operator is clicked, it replaces "0" as the value of mM8. So when mM3.x.length === 2 and mM8.x !== 0, it is time for the computation to go forward. '  ),
-      h('p', 'mM1 holds the initial dice roll and the subsequent arrays of available numbers. When calc returns "20", the player get an additional point and a new roll of the dice. If calc returns 18, the player gets three points. A result of n modulo 5 gains a player five points. A result of 25 add one goal and re-sets the score to zero.'   ),
+      h('p', 'When numbers are clicked, they get pushed into mM3.x, an array after that is emptied after each roll of the dice. When an operator is clicked, it replaces "0" as the value of mM8. So when mM3.x.length === 2 and mM8.x !== 0, updateNums and updateOp are coded to request a new roll from the server. '  ),
    h('p', 'MonadIter instances together with the function "pause" provide a way to delay progress along a chain. "pause" is defined as follows:'),
         cow.pause, 
    h('p', 'If you click the button below, some monads will update two seconds later. '  ),
    h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: updatePauseDemo }, style: style4},
             [ cow.pauseDemo ],  ),
-      h('p', 'The functions provided to bind are simple. They perform a task, and then return a monad so the chain can continue. The method "fmap" takes ordinary functions which operates on the calling monad\'s value and returns a new monad with the calling monad\s identifier (variable name).  m.fmap(f) assigns f(m.x) to a new monad named "m". Using ordinary functions with bnd does not modify the calling monad, but it does compute values using either the calling monad\'s value or a value provided in the argument provided to bnd.  '  ),
-      h('p', 'Using "bnd" with "next", any monad can release any block. At any link, a chain of monads can divide into 2, 3, or any number of chains going there separate ways but still communicating with one another. Large applications can be organized into a single tree. '  ),
+      h('p', 'Using "bnd" with "next", any monad can release any block. At any link, a chain of monads can divide into 2, 3, or any number of chains going there separate ways but still communicating with one another. '  ),
       h('div', 'When you log in, the monad column on the right disappears and a scoreboard and chat section open up. You can\'t compete or chat as long as you remain in the default group "solo", even if other people are in group "solo". But if you change to, say, group "chat54" in two separate browser windows, you will see that both windows share rolls of the dice and chat messages they enter. People in separate locations can agree on a group name and compete and chat. If the name is cryptic, something like "c#*&%@@9J#lu88", the chat and the game will likely remain private. If you change to group "test", you might encounter me mucking about on this page, or maybe someone else looking for company by changing to group "test".  '  ),
       h('span', {style: inputStyle1}, 'You will need a socket in order to participate in chats and play the game. A socket is created when you log in. '  ),
       h('br'),
@@ -145,7 +139,9 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('br' ),
         h('br' ),
       h('span', 'The repository for this open source project is at ' ),
-      h('a', {props: {href: 'https://github.com/dschalk?tab=repositories'}, style: {color: '#FFEBCD'}}, 'github.com/dschalk/' ),
+      h('a', {props: {href: 'https://github.com/dschalk?tab=repositories'}, style: {color: '#FFEBCD'}}, 'github.com/dschalk' ),
+      h('span', '. Parts 1 and 2 of this series are running online. Links are at: ' ),
+      h('a', {props: {href: 'http://schalk.net'}, style: {color: '#FFEBCD'}}, 'schalk.net.' ),
       h('div', {style: {height: '300px'}} ),
       h('div', {style: monadStyle}, [  
       h('div',{style: { width: '30%', position: 'fixed', top: '15px', right: '15px', color: '#CCFDDA'}}, [ 
@@ -213,6 +209,7 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('span', 'mMnbrs.x: '),
         h('span', {style: styleM}, '  ' + mMnbrs),
         h('br'),
+        h('h2', {style: {color: '#ffba66'}}, mMgoals2.x ),
         h('br'),
         h('br'),
         h('button', {on: { mouseenter: updateRe, mouseleave: updateRl, click: updateR }, style: styleR},
@@ -245,13 +242,13 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('br' ),
         h('hr' ),
         h('p' ),
-        h('span', 'Time remaining: '  ),  
-        h('span', {style: {color: '#FF0000', fontSize: '32px' }}, ''+(DS_T/1000)  ),
-        h('br' ),
         h('br' ),
         h('span', 'Score: '  ),
         h('span', {style: {color: '#FF0000', fontSize: '32px' }}, mM13.x ),  
         h('br' ),
+        h('br'),
+        h('h2', {style: {color: '#ffba66'}}, mMgoals2.x ),
+        h('br'),
         ]) 
       ])
     ]) 
@@ -270,11 +267,24 @@ function update0() {
 }
 
 var score = function(v,j) {
-  let k = 0;
-  if (mM13.x == 25) {k = 1};
-  socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + k);
-  let mon = new Monad(v);
-  return mon;
+  socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 0);
+  mM13.ret(v + j);
+  return ret(v + j);
+}
+
+var score2 = function score2() {
+  let j = -25
+  mMgoals.ret(mMgoals.x + 1);
+  socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 1);
+  return mM13.ret(0);
+}
+
+var winner = function winner() {
+  let k = -3
+  mMgoals.ret(mMgoals.x + 1);
+  socket.send('CG#$42,' + Group + ',' + Name + ',' + 0 + ',' + k);
+  mMgoals2.ret('The winner is ' + Name);
+  return ret(0);
 }
 
 var newRoll = function(v) {
@@ -284,78 +294,52 @@ var newRoll = function(v) {
 };
 
 function updateCalc() { 
-  READY = 0;
-  console.log('IN updateCalc');
-  monadStyle = inputStyleB;
-  chatStyle = inputStyleA;
+  console.log('In updateCalc');
   ret('start').bnd(() => (
-      ( mMZ2.block()
-                    .bnd(() => mM14
-                    .ret('Score: ' + (mM13.x + 1))
-                    .bnd(() => mM13
-                    .ret(mM13.x + 1)
+      ( mMZ2.block().bnd(() => mM13
                     .bnd(score,1)
-                    .bnd(newRoll))) ),
-
-      ( mMZ4.block()
-                    .bnd(() => mM14
-                    .ret('Score: ' + (mM13.x + 3))
-                    .bnd(() => mM13
-                    .ret(mM13.x + 3)
+                    .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
+                    .bnd(newRoll)) ),
+      ( mMZ4.block().bnd(() => mM13
                     .bnd(score,3)
-                    .bnd(newRoll))) ),
-      ( mMZ5.block()
-                    .bnd(() => mM14
-                    .ret('Score: ' + (mM13.x + 5))
-                    .bnd(() => mM13
-                    .ret(mM13.x + 5)
-                    .bnd(score,5)
-                    .bnd(newRoll))) ),
-      ( mMZ6.block()
-                    .bnd(() => mM17
-                    .ret('Goals: ' + (mMgoals.x + 1))
-                    .bnd(() => mMgoals
-                    .ret(mMgoals.x + 1)
-                    .bnd(() => mM13
-                    .ret(0)
-                    .bnd(score,-25)
-                    .bnd(newRoll)))) ),     
-       (mM3
-                    .bnd(x => mM7.ret(calc(x[0], mM8.x, x[1]))
-                    .bnd(x => mM1.bnd(push, x).bnd(x => mM1.ret(x))
-                    .bnd(clean).bnd(x => mM1.ret(x))
-                    .bnd(next, (mM7.x == 18), mMZ4)
-                    .bnd(next, (mM7.x == 20), mMZ2) 
-                    .bnd(next, ((mM7.x == 20 || mM7.x == 18) && (mM13.x % 5) === 0), mMZ5) 
-                    .bnd(next, (mM13.x == 25), mMZ6)
-                    .bnd(displayOff, (mM1.x.length+''))
+                    .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
+                    .bnd(newRoll)) ),
+          ( mMZ5.block().bnd(() => mM13
+                        .bnd(score,5)
+                        .bnd(next, 25, mMZ6)
+                        .bnd(newRoll)) ),
+              ( mMZ6.block().bnd(() => mM13
+                            .bnd(score2) 
+                            .bnd(() => mMgoals.bnd(next,3,mMZ7))) ),
+                  (mMZ7.block().bnd(() => mM13.bnd(winner)) ),                 
+      (mM3.bnd(x => mM7
+                    .ret(calc(x[0], mM8.x, x[1]))
+                    .bnd(next, 18, mMZ4)
+                    .bnd(next, 20, mMZ2) 
+                    .bnd(() => mM1.bnd(push,mM7.x)
+                    .bnd(mM1.ret)
+                    .bnd(displayOff, ((mM1.x.length)+''))
                     .bnd(() => mM3
                     .ret([])
                     .bnd(() => mM4
-                    .ret(0).bnd(mM8.ret).bnd(mM7.ret)
+                    .ret(0).bnd(mM8.ret)
                     .bnd(() => mM5.ret('Done')
-                    .bnd(update)   ))))) )
-  )) 
+                    .bnd(update) ))))) ) 
+  ))     
 }
 
 function updateNums(e) {
-  socket.send(`EQ#$42,${Group},${Name}`);
-  DS_T = 8000;
-  READY += 1;
   mM2.ret([e.target.value, e.target.textContent]) 
   .bnd(() => mM3)
   .bnd(push,mM2.x[1])
   .bnd(() => {mM1.x[mM2.x[0]] = ""; return mM5;})
   .bnd(update)
-  if (READY === 3) {updateCalc();}
+  if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
 }
 
 function updateOp(e) {
-  socket.send(`EQ#$42,${Group},${Name}`);
-  DS_T = 8000;
-  READY += 1;
-  mM8.ret(e.target.textContent);
-  if (READY === 3) {updateCalc();}
+  mM8.ret(e.target.textContent).bnd(update);
+  if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
 }
 
 function updateFocus() {
@@ -421,7 +405,6 @@ function updateLogin(e) {
        mM3.ret([]).bnd(mM2.ret);
        e.target.value = '';
        afocus = {autofocus: true};
-       READY = 0;
        update0();
      }
 }
@@ -432,47 +415,14 @@ function updateGoback() {
        update0();
 }
 
-function updateRoll() {
+function  updateRoll() {
   styleRoll2 = {display: 'none'};    
   monadStyle = inputStyleB;
   chatStyle = inputStyleA;
-  mM14
-  .ret('Score: ' + (mM13.x - 1))
-  .bnd(() => mM13
-  .ret(mM13.x - 1)
-  .bnd(score,-1))
+  mM13.bnd(score,-1)
   .bnd(update);
   console.log('About to leave updateRoll');
   socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
-}
-
-function rollDice() { 
-  setInterval( function() {
-    DS_T -= 1000;
-    if (DS_T === 0) { 
-      DS_T = 8000;
-      socket.send(`EQ#$42,${Group},${Name}`);
-      socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
-    }
-    update0();
-  },1000 );
-}
-
-function rollD(v) { 
-  DS_T = 8000;
-  if (SETINTERVAL) {
-    setInterval( function() {
-      DS_T -= 1000;
-      update0();
-      if (DS_T === 0) { 
-        DS_T = 8000;
-        socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
-      }
-    },1000 );
-  }
-  SETINTERVAL = false;
-  let mon = new Monad(v);
-  return mon;
 }
 
 function updateGotochat() {
@@ -562,10 +512,6 @@ socket.onmessage = function(event) {
   let ext7 = gameArray[7];
   let ext8 = gameArray[8];
 
-
-
-
-
   /* let group = that.data.group;
    let name = that.state.name;
    let ar = extra.split("<br>");
@@ -594,15 +540,15 @@ socket.onmessage = function(event) {
           break;
           
           case "CA#$42":                    // Triggedarkred by ROLL
-              DS_T = 8000
               mM1.ret([extra,  ext4,  ext5,  ext6])
               .bnd(() => mM17.ret(['add', 'subtract', 'mult', 'div', 'concat']) 
               .bnd(() => mM3.ret([])
               .bnd(() => mM8.ret(0)
-              .bnd(() => mM6.bnd(displayInline,1)
-              .bnd(displayInline,2)
-              .bnd(displayInline,3)
-              .bnd(rollD)
+              .bnd(() => mM6
+              .bnd(displayInline,'0')
+              .bnd(displayInline,'1')
+              .bnd(displayInline,'2')
+              .bnd(displayInline,'3')
               .bnd(update)  ))));
           break;
 
@@ -616,7 +562,10 @@ socket.onmessage = function(event) {
             let scores = extra.split("<br>");
             mMscbd.ret(scores)
             .bnd(updateScoreboard)
-            .bnd(update); 
+            .bnd(() => mM3.ret([])
+            .bnd(() => mM8.ret(0)
+            .bnd(() => mM6
+            .bnd(update))));
           break;
 
           case "CD#$42":  // Updates the message display.
@@ -628,29 +577,19 @@ socket.onmessage = function(event) {
             .bnd(updateMessages)
             .bnd(update);
           break;
-
-
-
-
-
-
           case "CF#$42":                              // Re-set after a each clculation.
           break;
 
         case "CH#$42":
           break;
 
-          case "CK#$42":                      // Updates DS_T after each calculation.
+          case "CK#$42":                   
           break;
 
           case "CQ#$42":                 
           break;
 
           case "DQ#$42":                 
-          break;
-
-          case "EQ#$42":                 
-            DS_T = 8000;
           break;
 
           case "FQ#$42":                 

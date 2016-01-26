@@ -1,18 +1,18 @@
-"use strict";
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+"use strict";'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-
-var Monad = function Monad(z,g) {
+var Monad = function Monad(z, g) {
   var _this = this;
 
   _classCallCheck(this, Monad);
 
   this.x = z;
-  if (arguments.length === 1) {this.id = 'anonymous'}
-  else {this.id = g}
+  if (arguments.length === 1) {
+    this.id = 'anonymous';
+  } else {
+    this.id = g;
+  }
 
   this.bnd = function (func) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -23,25 +23,19 @@ var Monad = function Monad(z,g) {
   };
 
   this.ret = function (a) {
-    var str = _this.id
-    if (str === 'anonymous') {return new Monad(a,'anonymous')};
-    eval(str + '= new Monad(a,' + "str" + ')'); 
+    var str = _this.id;
+    if (str === 'anonymous') {
+      return new Monad(a, 'anonymous');
+    };
+    eval(str + '= new Monad(a,' + "str" + ')');
     return window[_this.id];
-  };
-
-  this.fmap = function (f) {
-    for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-      args[_key2 - 2] = arguments[_key2];
-    }
-
-    var mon = arguments.length <= 1 || arguments[1] === undefined ? _this : arguments[1];
-
-    mon.ret(f.apply(undefined, [mon.x].concat(args)));
-    return mon;
   };
 };
 
 ;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
 var MonadIter = function MonadIter(z, g) {
   var _this = this;
 
@@ -125,7 +119,8 @@ var mMscbd = M([],'mMscbd');
 var mMmessages = M([],'mMmessages');
 var mMscoreboard = M([],'mMscoreboard');
 var mMmsg = M([],'mMmsg');
-var mMgoals = M([],'mMgoals');
+var mMgoals = M(0,'mMgoals');
+var mMgoals2 = M('','mMgoals2');
 var mMnbrs = M([],'mMnbrs');
 var mMnumbers = M([],'mMnumbers');
 
@@ -177,8 +172,10 @@ var pause = function(x,t,mon2) {
 };
 
 var push = function push(x,v) {
-  x.push(v);
-  let mon = new Monad(x);
+  let ar = x;
+  ar.push(v);
+  let cleanX = ar.filter(v => (v !== "" && v !== undefined));
+  let mon = new Monad(cleanX);
   return mon;
 };
 
@@ -211,7 +208,22 @@ var splice = function splice(x,i) {
   return mon;
 }
 
-var next = function next(x,condition,mon2) {
+var pop = function pop(x) {
+  let v = x[x.length - 1];
+  console.log('In pop. v = ',v);
+  let mon = new Monad(v);
+  return mon;
+}
+
+var next = function next(x,y,mon2) {
+  if (x === y) {
+    mon2.release();
+  }
+  let mon = new Monad(x);
+  return mon
+}
+
+var next2 = function next(x,condition,mon2) {
   if (condition) {
     mon2.release();
   }
@@ -273,8 +285,10 @@ var ad = function ad(a, b) {
 var id = function id(x) {
   return x;
 };
-var lo = function lo(x) {
-  return console.log(x);
+var log = function log(x,message) {
+  console.log(message);
+  let mon = new Monad(x);
+  return mon;
 };
 
 var test5 = function test5(m) {

@@ -13,7 +13,7 @@ const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
       else {this.id = g}
 
       this.bnd = (func, ...args) => {
-        func(this.x, ...args);
+        return func(this.x, ...args);
       };
 
       this.ret = a => {
@@ -21,12 +21,6 @@ const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
         if (str === 'anonymous') {return new Monad(a,'anonymous')};
         eval(str + '= new Monad(a,' + "str" + ')'); 
         return window[this.id];
-      };
-
-      this.fmap = (f, mon = this, ...args) => {      
-        mon.ret( f(mon.x, ...args));
-        return mon;
-
       };
     }
   };
@@ -70,25 +64,25 @@ const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
 
 const steps = h('pre', {style: {color: '#AFEEEE' }}, 
 `  function updateSteps(event) {
-     mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)
-     .bnd(() => mM1.ret('Click the mMI2.release() button to proceed')
-     .bnd(() => mMI2.block()
-     .bnd(() => mM2.ret('Click it again.')
-     .bnd(() => mMI2.block()
-     .bnd(() => mM3.ret('Keep going')
-     .bnd(() => mMI2.block()
-     .bnd(() => mM4.ret('One more')
-     .bnd(() => mMI2.block()
-     .bnd(() => mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret)
-     .bnd(mM4.ret)
-      ))))))))) 
-     oldVnode = patch(oldVnode, newVnode());
+      mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)
+       .bnd(() => mM1.ret('Click the mMZ2.release() button to proceed')
+       .bnd(() => mMZ2.block()
+       .bnd(() => mM2.ret('Click it again.')
+       .bnd(() => mMZ2.block()
+       .bnd(() => mM3.ret('Keep going')
+       .bnd(() => mMZ2.block()
+       .bnd(() => mM4.ret('One more')
+       .bnd(() => mMZ2.block()
+       .bnd(() => mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret)
+       .bnd(mM4.ret)
+        ))))))))) 
+      oldVnode = patch(oldVnode, newVnode());
   }  ` 
 );  
 
 const dice = h('pre', {style: {color: '#AFEEEE' }}, 
 `function updateNums(e) {
-  socket.send(\`EQ#$42,${Group},${Name}\`);
+  socket.send(\`EQ#$42,\${Group},\${Name}\`);
   DS_T = 8000;
   mM2.ret([e.target.value, e.target.textContent]) 
   .bnd(() => mM3)
@@ -99,7 +93,7 @@ const dice = h('pre', {style: {color: '#AFEEEE' }},
 }
 
 function updateOp(e) {
-  socket.send(\`EQ#$42,${Group},${Name}\`);
+  socket.send(\`EQ#$42,\${Group},\${Name}\`);
   DS_T = 8000;
   mM8.ret(e.target.textContent);
   updateCalc();
@@ -107,62 +101,61 @@ function updateOp(e) {
 
 function updateCalc() { 
   READY = 0;
-  console.log('IN updateCalc');
-  monadStyle = inputStyleB;
-  chatStyle = inputStyleA;
+  console.log('In updateCalc');
   ret('start').bnd(() => (
-      ( mMZ2.block()
-                    .bnd(() => mM14
-                    .ret('Score: ' + (mM13.x + 1))
-                    .bnd(() => mM13
-                    .ret(mM13.x + 1)
+      ( mMZ2.block().bnd(() => mM13
                     .bnd(score,1)
-                    .bnd(newRoll))) ),
-
-      ( mMZ4.block()
-                    .bnd(() => mM14
-                    .ret('Score: ' + (mM13.x + 3))
-                    .bnd(() => mM13
-                    .ret(mM13.x + 3)
+                    .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
+                    .bnd(newRoll)) ),
+      ( mMZ4.block().bnd(() => mM13
                     .bnd(score,3)
-                    .bnd(newRoll))) ),
-      ( mMZ5.block()
-                    .bnd(() => mM14
-                    .ret('Score: ' + (mM13.x + 5))
-                    .bnd(() => mM13
-                    .ret(mM13.x + 5)
-                    .bnd(score,5)
-                    .bnd(newRoll))) ),
-      ( mMZ6.block()
-                    .bnd(() => mM17
-                    .ret('Goals: ' + (mMgoals.x + 1))
-                    .bnd(() => mMgoals
-                    .ret(mMgoals.x + 1)
-                    .bnd(() => mM13
-                    .ret(0)
-                    .bnd(score,-25)
-                    .bnd(newRoll)))) ),     
-       (mM3
-                    .bnd(x => mM7.ret(calc(x[0], mM8.x, x[1]))
-                    .bnd(x => mM1.bnd(push, x).bnd(x => mM1.ret(x))
-                    .bnd(clean).bnd(x => mM1.ret(x))
-                    .bnd(next, (mM7.x == 18), mMZ4)
-                    .bnd(next, (mM7.x == 20), mMZ2) 
-                    .bnd(next, ((mM7.x == 20 || mM7.x == 18) && (mM13.x % 5) === 0), mMZ5) 
-                    .bnd(next, (mM13.x == 25), mMZ6)
-                    .bnd(displayOff, (mM1.x.length+''))
+                    .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
+                    .bnd(newRoll)) ),
+          ( mMZ5.block().bnd(() => mM13
+                        .bnd(score,5)
+                        .bnd(next, 25, mMZ6)
+                        .bnd(newRoll)) ),
+              ( mMZ6.block().bnd(() => mM13.bnd(score2)) )
+      (mM3.bnd(x => mM7
+                    .ret(calc(x[0], mM8.x, x[1]))
+                    .bnd(next, 18, mMZ4)
+                    .bnd(next, 20, mMZ2) 
+                    .bnd(() => mM1.bnd(push,mM7.x)
+                    .bnd(mM1.ret)
+                    .bnd(displayOff, ((mM1.x.length)+''))
                     .bnd(() => mM3
                     .ret([])
                     .bnd(() => mM4
                     .ret(0).bnd(mM8.ret)
                     .bnd(() => mM5.ret('Done')
-                    .bnd(update)   ))))) )
-  )) 
+                    .bnd(update) ))))) ) 
+  ))     
 }
 
-var newRoll = function(x,mon) {
+var next = function next(x,y,mon2) {
+  if (x === y) {
+    mon2.release();
+  }
+  let mon = new Monad(x);
+  return mon
+}
+
+var score = function(v,j) {
+  socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 0);
+  return mM13.ret(v + j);
+}
+
+var score2 = function score2() {
+  let j = -25
+  socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 1);
+  return mM13.ret(0);
+}
+
+var newRoll = function(v) {
   socket.send(\`CA#$42,${Group},${Name},6,6,12,20\`);
+  let mon = new Monad(v);
   return mon;
+};
 }  `
 );  
 
@@ -173,8 +166,7 @@ const send = h('pre', {style: {color: '#AFEEEE' }},
 );  
 
 const messages1 = h('pre', {style: {color: '#AFEEEE' }}, 
-`  
-  case "CB#$42":  // Updates the scoreboaard.
+`  case "CB#$42":  // Updates the scoreboaard.
     let scores = extra.split("<br>");
     mMscbd.ret(scores)
     .bnd(updateScoreboard)
@@ -189,13 +181,11 @@ const messages1 = h('pre', {style: {color: '#AFEEEE' }},
     .bnd(push,str)
     .bnd(updateMessages)
     .bnd(update);
-  break;
-`
+  break;  `
 );  
 
 const messages2 = h('pre', {style: {color: '#AFEEEE' }}, 
-` 
-  var updateScoreboard = function updateScoreboard(v) {
+`  var updateScoreboard = function updateScoreboard(v) {
     mMscoreboard.ret([]);
     let ar = mMscbd.x;
     let keys = Object.keys(ar);
@@ -218,8 +208,7 @@ const messages2 = h('pre', {style: {color: '#AFEEEE' }},
       .bnd(unshift, h('br'));
     }
     return mMmessages;
-  }
-`
+  }  `
 );  
 
 const messages3 = h('pre', {style: {color: '#AFEEEE' }}, 
@@ -302,8 +291,8 @@ const next = h('pre', {style: {color: '#AFEEEE' }},
 
 const updateNext = h('pre', {style: {color: '#AFEEEE' }}, 
 `  function updateNext() {
-  mMI2.release()  
-  oldVnode = patch(oldVnode, newVnode());
+    mMZ2.release();  
+    oldVnode = patch(oldVnode, newVnode());
   }  `
 );  
 
