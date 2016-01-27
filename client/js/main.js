@@ -5,6 +5,7 @@ import snabbdom from 'snabbdom';
 import h from 'snabbdom/h';
 
 var Group = 'solo';
+var Name;
 var afocus = {autofocus: false};
 var signinFocus = {autofocus: false};
 
@@ -21,6 +22,11 @@ var updateScoreboard = function updateScoreboard(v) {
     .bnd(unshift,'player [score] [goals]')
   return mMscoreboard;
 }
+
+window.onload = function (event) {
+    console.log('onopen event: ', event);
+    update0();
+};
 
 var updateMessages = function updateMessages(v) {
   mMmessages.ret([]);
@@ -42,16 +48,6 @@ function createWebSocket(path) {
 }
 
 var socket = createWebSocket('/');
-var Name;
-
-socket.onopen = function (event) {
-    console.log('cow onopen ', event);
-    update0();
-};
-
-var send = function(event) {
-  socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
-};
 
 const patch = snabbdom.init([
   require('snabbdom/modules/class'),          // makes it easy to toggle classes
@@ -59,7 +55,7 @@ const patch = snabbdom.init([
   require('snabbdom/modules/style'),          // handles styling on elements with support for animations
   require('snabbdom/modules/eventlisteners'), // attaches event listeners
 ]);
-https://github.com/paldepind/snabbdom 
+
 var oldVnode = document.getElementById('placeholder');
 
 function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, 
@@ -147,7 +143,7 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
       h('div',{style: { width: '30%', position: 'fixed', top: '15px', right: '15px', color: '#CCFDDA'}}, [ 
         h('div', {style: linkStyle}, [
         h('button', {on: { mouseenter: update5e, mouseleave: update5l, click: updateGotochat }, style: style5},
-            'Go To Chat'  ) ] ),
+            'Go To Game/Chat'  ) ] ),
         h('br'),
         h('span', 'mM1.x: '),
         h('span', {style: styleM}, '  ' + m1),
@@ -257,16 +253,19 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
 
 var newVnode  = () => {
   var newVnode = view(mM1.x, mM2.x, mM3.x, mM4.x, mM5.x, mM6.x, mM7.x, mM8.x, mM9.x,
-  mM10.x, mM11.x, mM12.x, mM13.x, mM14.x, mM15.x, mM16.x, mM17.x, mM18.x, mM19.x, mMZ1.x, 
-  mMZ2.x, mMZ3.x, mMZ4.x, mMZ5.x, mMZ6.x, mMZ7.x, mMZ8.x, mMZ9.x);
+  mM10.x, mM11.x, mM12.x, mM13.x, mM14.x, mM15.x, mM16.x, mM17.x, mM18.x, mM19.x ); 
   return newVnode;
 }
+
+var send = function() {
+  socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
+};
 
 function update0() {
   oldVnode = patch(oldVnode, newVnode());
 }
 
-var score = function(v,j) {
+var score = function score(v,j) {
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 0);
   mM13.ret(v + j);
   return ret(v + j);
@@ -345,8 +344,6 @@ function updateOp(e) {
 function updateFocus() {
   signinFocus = {autofocus: true};
   update0();
-  signinFocus = {autofocus: true};
-  update0();
 }
 
 var displayOff = function displayOff(x,a) {
@@ -359,12 +356,6 @@ var displayOff = function displayOff(x,a) {
 var displayInline = function displayInline(x,a) {
   console.log('x, a ', x, a);
     document.getElementById(a).style.display = 'inline';
-    let mon = new Monad(x);
-    return mon;
-};
-
-var displayBlock = function displayBlock(x,a) {
-    document.getElementById(a).style.display = 'block';
     let mon = new Monad(x);
     return mon;
 };
@@ -456,13 +447,13 @@ function updateGroup(e) {
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function updateR(event) {
+function updateR() {
   mM2.ret(0).bnd(mM3.ret).bnd(mM4.ret).bnd(mM5.ret)
   .bnd(mM6.ret).bnd(mM7.ret).bnd(mM8.ret).bnd(mM9.ret).bnd(mM10.ret).bnd(mM15.ret).bnd(mM16.ret).bnd(mM17.ret).bnd(mM18.ret).bnd(mM19.ret).bnd(mMZ1.ret).bnd(mMZ2.ret).bnd(() => mM1.ret([])).bnd(() => mM14.ret('Score: ' + mM13.x));
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function updateSteps(event) {
+function updateSteps() {
     mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)
      .bnd(() => mM1.ret('Click the mMZ2.release() button to proceed')
      .bnd(() => mMZ2.block()
@@ -483,11 +474,6 @@ function updateNext() {
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function updateEvent(event) {
-  mMZ2.ret(event);
-  oldVnode = patch(oldVnode, newVnode());
-}
-
 oldVnode = patch(oldVnode, newVnode());
 
 socket.onmessage = function(event) {
@@ -503,21 +489,12 @@ socket.onmessage = function(event) {
   }
   let d2 = event.data.substring(0,6);
   // let d3 = event.data.substring(2,6);
-  let sendersGroup = gameArray[1]; 
   let sender = gameArray[2];
   let extra = gameArray[3];
   let ext4 = gameArray[4];
   let ext5 = gameArray[5];
   let ext6 = gameArray[6];
-  let ext7 = gameArray[7];
-  let ext8 = gameArray[8];
 
-  /* let group = that.data.group;
-   let name = that.state.name;
-   let ar = extra.split("<br>");
-  let ar2 = ar.map(function (x) {
-    return x.split("_")
-  })  */
       switch (d2) {
           case "CC#$42":                         // Not broadcast. Login message.
             if (extra === '%#8*&&^1#$%^')  {
@@ -552,13 +529,7 @@ socket.onmessage = function(event) {
               .bnd(update)  ))));
           break;
 
-          case "DI#$42":                              // Changes data.information .
-          break;
-
-          case "CE#$42":                             // Updates numbers during play.
-          break;
-
-          case "CB#$42":  // Updates the scoreboaard.
+          case "CB#$42":                             // Updates the scoreboaard.
             let scores = extra.split("<br>");
             mMscbd.ret(scores)
             .bnd(updateScoreboard)
@@ -577,52 +548,9 @@ socket.onmessage = function(event) {
             .bnd(updateMessages)
             .bnd(update);
           break;
-          case "CF#$42":                              // Re-set after a each clculation.
-          break;
-
-        case "CH#$42":
-          break;
-
-          case "CK#$42":                   
-          break;
-
-          case "CQ#$42":                 
-          break;
-
-          case "DQ#$42":                 
-          break;
-
-          case "FQ#$42":                 
-          break;
-
-          case "GQ#$42":                 
-          break;
-
-          case "HQ#$42":                 
-          break;
-
-          case "CR#$42":                 // Resets the player interface after each round.
-          break;
-
-          case "CY#$42": // Triggedarkred by clicking "SCORE!".
-          break;
-
-          case "XY#$42":              // Triggedarkred by clicking "SCORE!" after "IMPOSSIBLE".
-          break;
-
-          case "DY#$42":                               // Triggered by clicking  "IMPOSSIBLE".
-          break;
-
-          case "DC#$42":
-          break;
-
-          case "DZ#$42":                                  // NOT IN USE
-          break;
-
-          case "IA#$42":
-          break;
-
+          
           default:
+            console.log('Message fell through to default');
           break;
       }
    }
@@ -712,99 +640,72 @@ var style16 = style2;
 var style16e = style1;
 var style16l = style2;
 
-var style17 = style2;
-var style17e = style1;
-var style17l = style2;
-
-var style18 = style2;
-var style18e = style1;
-var style18l = style2;
-
-var style19 = style2;
-var style19e = style1;
-var style19l = style2;
-
-var style20 = style2;
-var style20e = style1;
-var style20l = style2;
-
-var style21 = style2;
-var style21e = style1;
-var style21l = style2;
-
-var style22 = style2;
-var style22e = style1;
-var style22l = style2;
-
-var style23 = style2;
-var style23e = style1;
-var style23l = style2;
 
 var styleR = style2;
 var styleRe = style1;
 var styleRl = style2;
 
-function updateInput1(event) {
+function updateInput1() {
   inputStyle1 = inputStyleB;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update3e(event) {
+function update3e() {
   style0 = style1;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update3l(event) {
+function update3l() {
   style0 = style2;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update4e(event) {
+function update4e() {
   style4 = style1;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update4l(event) {
+function update4l() {
   style4 = style2;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update5e(event) {
+function update5e() {
   style5 = style1;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update5l(event) {
+function update5l() {
   style5 = style2;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update6e(event) {
+function update6e() {
   style6 = style1;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update6l(event) {
+function update6l() {
   style6 = style2;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update7e(event) {
+function update7e() {
   style7 = style1;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update7l(event) {
+function update7l() {
   style7 = style2;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update8e(event) {
+function update8e() {
   style8 = style1;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update8l(event) {
+function update8l() {
   style8 = style2;
   oldVnode = patch(oldVnode, newVnode());
 }
@@ -889,82 +790,12 @@ function update16l(event) {
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function update17e(event) {
-  style17 = style1;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update17l(event) {
-  style13 = style2;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update18e(event) {
-  style18 = style1;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update18l(event) {
-  style18 = style2;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update19e(event) {
-  style19 = style1;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update19l(event) {
-  style19 = style2;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update20e(event) {
-  style20 = style1;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update20l(event) {
-  style20 = style2;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update21e(event) {
-  style21 = style1;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update21l(event) {
-  style21 = style2;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update22e(event) {
-  style22 = style1;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update22l(event) {
-  style22 = style2;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update23e(event) {
-  style23 = style1;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function update23l(event) {
-  style23 = style2;
-  oldVnode = patch(oldVnode, newVnode());
-}
-
-function updateRe(event) {
+function updateRe() {
   styleR = style1;
   oldVnode = patch(oldVnode, newVnode());
 }
 
-function updateRl(event) {
+function updateRl() {
   styleR = style2;
   oldVnode = patch(oldVnode, newVnode());
 }
