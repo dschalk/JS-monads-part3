@@ -2,7 +2,7 @@
  
 This is the third page of the `Javascript Monads` series.  
 
-The project's running code is at [http://schalk.net](http://schalk.net). You can run the binary on port 3093 by entering `dist/build/server/server`. The named monads and and most of the unctions demonstrated here are in a script, so you can press F12 and experiment with them in the console.
+The project's running code is at [http://schalk.net](http://schalk.net). You can run the binary on port 3093 by entering `dist/build/server/server`. The named monads and and most of the functions demonstrated here are in a script, so you can press F12 and experiment with them in the console.
 
 The fairly complex behavior of an interactive websockets game is concisely defined the following tree of monads:
 
@@ -120,7 +120,7 @@ Here are the definitions of "next" and "next2":
     return mon
   }
 ```
-The first time updateCalc runs, functions and arguments are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  mM4 or mM5 are released and the function in its "p" attribute executes on the stored argument(s). If the result is a multiple of the number "5", mMZ5 is released. If the result is "25", mMZ6.p[0] executes on mMZ6[1]. And if the number of goals is "3", mMZ7 is released, declaring a winner.
+The first time updateCalc runs, functions and arguments are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released and the function in its "p" attribute executes on the stored argument(s). If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p[0] executes on mMZ6[1]. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
 
 ##Some Elementary Operations
 m.bnd(m2.ret) gives monad m2 m's value. In other words, m2.x === m.x is true. m2 doesn't mutate; rather, the name "m2" gets re-assigned to a monad with value m.x.
@@ -138,9 +138,8 @@ var ret = function ret(v) {
   return mon;
 }
 ```
-So for any monad "m", ret(a).bnd(f).bnd(m.ret) re-assigns "m" to a monad with a value of f(a). 
+For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's name "m" to a monad with a value of f(a). 
 
-`
 
 
 
