@@ -214,14 +214,12 @@ function updateFocus() {
 }
 
 var displayOff = function displayOff(x, a) {
-  console.log('a, typeof a: ', a, typeof a);
   document.getElementById(a).style.display = 'none';
   var mon = new Monad(x);
   return mon;
 };
 
 var displayInline = function displayInline(x, a) {
-  console.log('x, a ', x, a);
   document.getElementById(a).style.display = 'inline';
   var mon = new Monad(x);
   return mon;
@@ -231,7 +229,6 @@ function updateNumbers() {
   linkStyle2 = style2;
   mMnbrs.ret([]);
   var ob = test2();
-  console.log('Amulus Quotomuls');
   mMnbrs.x.push('The square root of the sum of the squares is a natural number:');
   for (var ants in ob) {
     mMnbrs.x.push(ob[ants][0] + ' and  ' + ob[ants][1] + ' ________ result: ' + hyp(ob[ants][0], ob[ants][1]));
@@ -276,7 +273,6 @@ function updateRoll() {
   monadStyle = inputStyleB;
   chatStyle = inputStyleA;
   mM13.bnd(score, -1).bnd(update);
-  console.log('About to leave updateRoll');
   socket.send('CA#$42,' + Group + ',' + Name + ',6,6,12,20');
 }
 
@@ -310,11 +306,9 @@ function updateGroup(e) {
 }
 
 function updateR() {
-  mM2.ret(0).bnd(mM3.ret).bnd(mM4.ret).bnd(mM5.ret).bnd(mM6.ret).bnd(mM7.ret).bnd(mM8.ret).bnd(mM9.ret).bnd(mM10.ret).bnd(mM15.ret).bnd(mM16.ret).bnd(mM17.ret).bnd(mM18.ret).bnd(mM19.ret).bnd(function () {
-    return mM1.ret([]).bnd(function () {
-      return mM14.ret('Score: ' + mM13.x);
-    }).bnd(update);
-  });
+  mM1.ret([]).bnd(mM2.ret).bnd(mM3.ret).bnd(function () {
+    return mM4.ret(0);
+  }).bnd(mM5.ret).bnd(mM6.ret).bnd(mM7.ret).bnd(mM8.ret).bnd(mM9.ret).bnd(mM10.ret).bnd(mM15.ret).bnd(mM16.ret).bnd(mM17.ret).bnd(mM18.ret).bnd(mM19.ret).bnd(update);
 }
 
 function updateSteps() {
