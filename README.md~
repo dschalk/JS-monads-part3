@@ -1,4 +1,4 @@
-#JS-monads-part3
+hJS-monads-part3
  
 This is the third page of the `Javascript Monads` series.  
 
@@ -123,11 +123,11 @@ Here are the definitions of "next" and "next2":
 The first time updateCalc runs, functions and arguments are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released and the function in its "p" attribute executes on the stored arguments. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p[0] executes on mMZ6[1]. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
 
 ##Some Elementary Operations
-m.bnd(m2.ret) gives monad m2 m's value. In other words, m2.x === m.x is true. m2 doesn't mutate; rather, the name "m2" gets re-assigned to a monad with value m.x.
+m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-assigned to a new monad with value m.x.
 
 m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of  f(m.x).
 
-m.bnd(f).bnd(m.ret) re-assigns "m" to a new monad with a value of f(m.x).
+m.bnd(f).bnd(m.ret) re-assigns the identifier "m" to a new monad with a value of f(m.x).
 
 m.bnd(x => m2.bnd(y => m3.bnd(z => m4.bnd(f,x,y,z) leaves m, m2, and m3 unchanged, but provides their values as arguments to f in m4.bnd(f,x,y,z).
 
@@ -138,9 +138,21 @@ var ret = function ret(v) {
   return mon;
 }
 ```
-For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's name "m" to a monad with a value of f(a). 
+For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's identifier "m" to a new monad with a value of f(a). 
 
+##Caution
 
+Assigning an identifier to a named monad can lead to unexpected results if you don't carefully think about what you are doing. Consider:
+```javascript
+mM1.ret(2)
+var a = mM1
+a.ret(77)
 
+console.log('a.x ===', a.x)       // a.x === 2
+console.log('mM1.x ===', mM1.x)   // mM1.x === 77
+```
+"var a = mM1" assigned the identifier "a" to a monad with a value of 2 and an id of "mM1", so a.ret(77) assigned "mM1" to a new monad with a value of 77 and an id of "mM1", replacing the previous monad named "mM1". "a" still poined to a monad with a value of 2.
+
+I can't think of any reason to create an identifier such as "a" with remote control over the behavior of a monad such as mM1 in the above example, so my advice is to refrain from creating variables that point to existing monads.  
 
 

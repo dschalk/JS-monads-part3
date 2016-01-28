@@ -140,7 +140,19 @@ var ret = function ret(v) {
 ```
 For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's identifier "m" to a new monad with a value of f(a). 
 
+##Caution
 
+Assigning an identifier to a named monad can lead to unexpected results if you don't carefully think about what you are doing. Consider:
+```javascript
+mM1.ret(2)
+var a = mM1
+a.ret(77)
 
+console.log('a.x ===', a.x)       // a.x === 2
+console.log('mM1.x ===', mM1.x)   // mM1.x === 77
+```
+"var a = mM1" assigned the identifier "a" to a monad with a value of 2 and an id of "mM1", so a.ret(77) assigned "mM1" to a new monad with a value of 77 and an id of "mM1", replacing the previous monad named "mM1". "a" still poined to a monad with a value of 2.
+
+I can't think of any reason to create an identifier such as "a" with remote control over the behavior of a monad such as mM1 in the above example, so my advice is to refrain from creating variables that point to existing monads.  
 
 
