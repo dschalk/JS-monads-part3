@@ -209,7 +209,7 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('br'),
         h('br'),
         h('button', {on: { mouseenter: updateRe, mouseleave: updateRl, click: updateR }, style: styleR},
-                   `REFRESH`   ),
+                   `RE-SET`   ),
         h('br', ),           
         h('br', ),           
         ])  
@@ -448,8 +448,7 @@ function updateGroup(e) {
 
 function updateR() {
   mM2.ret(0).bnd(mM3.ret).bnd(mM4.ret).bnd(mM5.ret)
-  .bnd(mM6.ret).bnd(mM7.ret).bnd(mM8.ret).bnd(mM9.ret).bnd(mM10.ret).bnd(mM15.ret).bnd(mM16.ret).bnd(mM17.ret).bnd(mM18.ret).bnd(mM19.ret).bnd(mMZ1.ret).bnd(mMZ2.ret).bnd(() => mM1.ret([])).bnd(() => mM14.ret('Score: ' + mM13.x));
-  oldVnode = patch(oldVnode, newVnode());
+  .bnd(mM6.ret).bnd(mM7.ret).bnd(mM8.ret).bnd(mM9.ret).bnd(mM10.ret).bnd(mM15.ret).bnd(mM16.ret).bnd(mM17.ret).bnd(mM18.ret).bnd(mM19.ret).bnd(() => mM1.ret([]).bnd(() => mM14.ret('Score: ' + mM13.x)).bnd(update));
 }
 
 function updateSteps() {
