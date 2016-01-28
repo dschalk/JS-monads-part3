@@ -123,7 +123,16 @@ Here are the definitions of "next" and "next2":
 Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, functions and arguments are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released and the function in p[0] executes on the arguments in p[1]. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p[0] executes on mMZ6.p[1]. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
 
 ##Some Elementary Operations
-m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-assigned to a new monad with value m.x.
+Anonymous monads can be created by the function "ret", defined as follow:
+```javascript
+var ret = function ret(v) {
+  var mon = new Monad(v, 'anonymous');
+  return mon;
+}
+```
+For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's identifier "m" to a new monad with a value of f(a). 
+
+m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-directed to a new monad with value m.x.
 
 m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of  f(m.x).
 
@@ -133,14 +142,6 @@ m.bnd(x => m2.bnd(y => m3.bnd(z => m4.ret(f(x,y,z)) leaves m, m2, and m3 unchang
 
 The method "bnd" accepts functions that return values instead of monads. For example, mM1.ret(4).bnd(x => x\*x\*x) returns the number 64.
 
-Anonymous monads can be created by the function "ret", defined as follow:
-```javascript
-var ret = function ret(v) {
-  var mon = new Monad(v, 'anonymous');
-  return mon;
-}
-```
-For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's identifier "m" to a new monad with a value of f(a). 
 
 ##Caution
 
