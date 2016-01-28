@@ -138,6 +138,14 @@ var next = function next(x,y,mon2) {
   return mon
 }
 
+var next2 = function next(x,condition,mon2) {
+  if (condition) {
+    mon2.release();
+  }
+  let mon = new Monad(x);
+  return mon
+}
+
 var score = function(v,j) {
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 0);
   return mM13.ret(v + j);

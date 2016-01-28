@@ -96,7 +96,6 @@ function updateOp(e) {
 }
 
 function updateCalc() { 
-  console.log('In updateCalc');
   ret('start').bnd(() => (
       ( mMZ2.block().bnd(() => mM13
                     .bnd(score,1)
@@ -132,6 +131,14 @@ function updateCalc() {
 
 var next = function next(x,y,mon2) {
   if (x === y) {
+    mon2.release();
+  }
+  let mon = new Monad(x);
+  return mon
+}
+
+var next2 = function next(x,condition,mon2) {
+  if (condition) {
     mon2.release();
   }
   let mon = new Monad(x);

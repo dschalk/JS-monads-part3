@@ -293,7 +293,6 @@ var newRoll = function(v) {
 };
 
 function updateCalc() { 
-  console.log('In updateCalc');
   ret('start').bnd(() => (
       ( mMZ2.block().bnd(() => mM13
                     .bnd(score,1)
