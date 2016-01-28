@@ -67,39 +67,31 @@ The "mM" prefix designates monads. The "mMZ" prefix specifically designates inst
   };
 
   class MonadIter {
-    constructor(z,g) {
+    constructor() {
 
-      this.x = z;
-      this.id = g;
       this.flag = false;
-      this.p = [];
+      this.p = undefined;
 
       this.block = () => {
         this.flag = true;
-        return this;
-        }
+      }
 
       this.release = () => {
-        let self = this;
-        let p = this.p;
-        p[0](self.x, ...p[1]);
-        self.flag = false;
-        return self;
+        this.flag = false;
+        p();
       }
  
-      this.bnd = (func, ...args) => {
-        let self = this;
-        if (self.flag === false) {
-          func(self.x, ...args);
-          return self;
+      this.bnd = func => {
+        if (this.flag === false) {
+          func();
         }
-        if (self.flag === true) {
-          self.p = [func, args];
-          return self;
+        if (this.flag === true) {
+          this.p = func;
         }
       }
     }
   }
+
 ```
 Here are the definitions of "next" and "next2":
 

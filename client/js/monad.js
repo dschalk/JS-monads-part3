@@ -1,6 +1,37 @@
 'use strict';
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { 
+  if (!(instance instanceof Constructor)) { 
+    throw new TypeError("Cannot call a class as a function"); 
+  } 
+}
+
+var MonadIter = function MonadIter() {
+  var _this = this;
+
+  _classCallCheck(this, MonadIter);
+
+  this.flag = false;
+  this.p = undefined;
+
+  this.block = function () {
+    _this.flag = true;
+  };
+
+  this.release = function () {
+    _this.flag = false;
+    p();
+  };
+
+  this.bnd = function (func) {
+    if (_this.flag === false) {
+      func();
+    }
+    if (_this.flag === true) {
+      _this.p = func;
+    }
+  };
+};
 
 var Monad = function Monad(z, g) {
   var _this = this;
@@ -18,7 +49,6 @@ var Monad = function Monad(z, g) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
-
     return func.apply(undefined, [_this.x].concat(args));
   };
 
@@ -124,19 +154,19 @@ var mMgoals2 = M('','mMgoals2');
 var mMnbrs = M([],'mMnbrs');
 var mMnumbers = M([],'mMnumbers');
 
-var MI = function MI(a, b) {
-  return new MonadIter(a, b);
+var MI = function MI() {
+  return new MonadIter();
 };
 
-var mMZ1 = MI(false, 'mMZ1');
-var mMZ2 = MI(false, 'mMZ2');
-var mMZ3 = MI(false, 'mMZ3');
-var mMZ4 = MI(false, 'mMZ4');
-var mMZ5 = MI(false, 'mMZ5');
-var mMZ6 = MI(false, 'mMZ6');
-var mMZ7 = MI(false, 'mMZ7');
-var mMZ8 = MI(false, 'mMZ8');
-var mMZ9 = MI(false, 'mMZ9');
+var mMZ1 = MI();
+var mMZ2 = MI();
+var mMZ3 = MI();
+var mMZ4 = MI();
+var mMZ5 = MI();
+var mMZ6 = MI();
+var mMZ7 = MI();
+var mMZ8 = MI();
+var mMZ9 = MI();
 
 var toNums = function toNums(x) {
   let y = x.map(x => parseFloat(x));
