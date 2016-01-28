@@ -70,15 +70,16 @@ The "mM" prefix designates monads. The "mMZ" prefix specifically designates inst
     constructor() {
 
       this.flag = false;
-      this.p = undefined;
+      this.p = function() {};
 
       this.block = () => {
         this.flag = true;
+        return this;
       }
 
       this.release = () => {
         this.flag = false;
-        p();
+        this.p();
       }
  
       this.bnd = func => {

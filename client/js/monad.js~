@@ -12,7 +12,7 @@ var MonadIter = function MonadIter() {
   _classCallCheck(this, MonadIter);
 
   this.flag = false;
-  this.p = undefined;
+  this.p = function() {};
 
   this.block = function () {
     _this.flag = true;
@@ -20,15 +20,15 @@ var MonadIter = function MonadIter() {
 
   this.release = function () {
     _this.flag = false;
-    p();
+    _this.p();
   };
 
   this.bnd = function (func) {
-    if (_this.flag === true) {
-      p = func;
+    if (_this.flag === false) {
+      func();
     }
     if (_this.flag === true) {
-      func();
+      _this.p = func;
     }
   };
 };
@@ -63,48 +63,6 @@ var Monad = function Monad(z, g) {
 };
 
 ;
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
-var MonadIter = function MonadIter(z, g) {
-  var _this = this;
-
-  _classCallCheck(this, MonadIter);
-
-  this.x = z;
-  this.id = g;
-  this.flag = false;
-  this.p = [];
-
-  this.block = function () {
-    _this.flag = true;
-    return _this;
-  };
-
-  this.release = function () {
-    var self = _this;
-    var p = _this.p;
-    p[0].apply(p, [self.x].concat(_toConsumableArray(p[1])));
-    self.flag = false;
-    return self;
-  };
-
-  this.bnd = function (func) {
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-
-    var self = _this;
-    if (self.flag === false) {
-      func.apply(undefined, [self.x].concat(args));
-      return self;
-    }
-    if (self.flag === true) {
-      self.p = [func, args];
-      return self;
-    }
-  };
-};
 
 var ret = function ret(v) {
   var mon = new Monad(v, 'anonymous');

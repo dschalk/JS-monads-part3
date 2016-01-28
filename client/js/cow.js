@@ -30,15 +30,16 @@ const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
     constructor() {
 
       this.flag = false;
-      this.p = undefined;
+      this.p = function() {};
 
       this.block = () => {
         this.flag = true;
+        return this;
       }
 
       this.release = () => {
         this.flag = false;
-        p();
+        this.p();
       }
  
       this.bnd = func => {
