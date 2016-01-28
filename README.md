@@ -112,7 +112,7 @@ Here are the definitions of "next" and "next2":
     return mon
   }
 ```
-Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, functions and arguments are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released and the function in p[0] executes on the arguments in p[1]. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p[0] executes on mMZ6.p[1]. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
+Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, functions are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released causing the function p to execute. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p is called. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
 
 ##Some Elementary Operations
 Anonymous monads can be created by the function "ret", defined as follow:
