@@ -129,7 +129,7 @@ m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a v
 
 m.bnd(f).bnd(m.ret) re-assigns the identifier "m" to a new monad with a value of f(m.x).
 
-m.bnd(x => m2.bnd(y => m3.bnd(z => m4.bnd(f,x,y,z) leaves m, m2, and m3 unchanged, but provides their values as arguments to f in m4.bnd(f,x,y,z).
+m.bnd(x => m2.bnd(y => m3.bnd(z => m4.ret(f(x,y,z)) leaves m, m2, and m3 unchanged, but provides their values as arguments to f, giving mM4 the value f(mM1.x, mM2.x, mM3.x). That result could also be accomplished by simply running ret(f(mM1.x, mM2.x, mM3.x)).bnd(mM4.ret) (see "a.bnd(mM2.ret)" above).
 
 The method "bnd" accepts functions that return values instead of monads. For example, mM1.ret(4).bnd(x => x\*x\*x) returns the number 64.
 
