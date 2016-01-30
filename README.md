@@ -69,30 +69,17 @@ The "mM" prefix designates monads. The "mMZ" prefix specifically designates inst
   class MonadIter {
     constructor() {
 
-      this.flag = false;
       this.p = function() {};
 
-      this.block = () => {
-        this.flag = true;
-        return this;
-      }
-
       this.release = () => {
-        this.flag = false;
-        this.p();
+        return this.p();
       }
  
       this.bnd = func => {
-        if (this.flag === false) {
-          func();
-        }
-        if (this.flag === true) {
           this.p = func;
-        }
       }
     }
   }
-
 ```
 Here are the definitions of "next" and "next2":
 
@@ -101,16 +88,14 @@ Here are the definitions of "next" and "next2":
     if (x === y) {
       mon2.release();
     }
-    let mon = new Monad(x);
-    return mon
+    return ret(x);
   }
   
   var next2 = function next(x,condition,mon2) {
     if (condition) {
       mon2.release();
     }
-    let mon = new Monad(x);
-    return mon
+    return ret(x);
   }
 ```
 Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, functions are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released causing the function p to execute. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p is called. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
@@ -120,7 +105,6 @@ Anonymous monads can be created by the function "ret", defined as follow:
 ```javascript
 var ret = function ret(v) {
   var mon = new Monad(v, 'anonymous');
-  return mon;
 }
 ```
 For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's identifier "m" to a new monad with a value of f(a). 
