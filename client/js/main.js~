@@ -122,7 +122,6 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
    h('p', 'If you click the button below, some monads will update two seconds later. '  ),
    h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: pauseDemo }, style: style4},
             [ cow.pauseDemo ],  ),
-      h('p', 'Using "bnd" with "next", any monad can release any block. At any link, a chain of monads can divide into 2, 3, or any number of chains going there separate ways but still communicating with one another. '  ),
       h('h2',  'Dynamic List Display' ),
       h('p', 'The lists of group members and their scores, and the lists of messages broadcast within each group, are subject to change as scores change and players join or leave the group, and as messages get sent and broadcast to the group. When a group member\'s score changes and when a group member sends a message, the information goes to the server and the server broadcasts the updated state (maintained in a Haskell TMVar) to all group members. In socket.onmessage, the incoming messages are sorted according to their prefixes in a switch block and if the message is a scoreboard update or chat message, one of the following functions is called: ' ),
       cow.messages1,
@@ -285,8 +284,7 @@ var winner = function winner() {
 
 var newRoll = function(v) {
   socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
-  let mon = new Monad(v);
-  return mon;
+  return ret(v);
 };
 
 function updateCalc() { 
@@ -343,14 +341,12 @@ function updateFocus() {
 
 var displayOff = function displayOff(x,a) {
     document.getElementById(a).style.display = 'none';
-    let mon = new Monad(x);
-    return mon;
+    return ret(x);
 };
 
 var displayInline = function displayInline(x,a) {
     document.getElementById(a).style.display = 'inline';
-    let mon = new Monad(x);
-    return mon;
+    return ret(x);
 };
 
 function updateNumbers() {
@@ -795,8 +791,7 @@ var update = function update(v) {
   mM10.x, mM11.x, mM12.x, mM13.x, mM14.x, mM15.x, mM16.x, mM17.x, 
   mM18.x, mM19.x, mMZ1.x, mMZ2.x, mMZ3.x, mMZ4.x, mMZ5.x, mMZ6.x, mMZ7.x, mMZ8.x, mMZ9.x);
   oldVnode = patch(oldVnode, newVnode);
-  let mon = new Monad(v);
-  return mon;
+  return ret(v);
 }
 
 

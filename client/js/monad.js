@@ -59,17 +59,16 @@ var ret = function ret(v) {
 }
 
 var cube = function(v) {
-  var mon = new Monad(v*v*v);
-  return mon;
+  return ret(v*v*v);
 }
 
 var add = function(a,b) {
-  var mon = new Monad(a+b);
-  return mon;
+  return ret(a+b);
 }
 
 var M = function M(a,b) {
-  return new Monad(a,b);
+  var mon = new Monad(a,b);
+  return mon;
 };
 
 
@@ -117,8 +116,7 @@ var mMZ9 = MI();
 
 var toNums = function toNums(x) {
   let y = x.map(x => parseFloat(x));
-  let mon = new Monad(y);
-  return mon; 
+  return ret(y);
 };
 
 var calc = function calc(a,op,b) { 
@@ -151,100 +149,61 @@ var push = function push(x,v) {
   let ar = x;
   ar.push(v);
   let cleanX = ar.filter(v => (v !== "" && v !== undefined));
-  let mon = new Monad(cleanX);
-  return mon;
+  return ret(cleanX);
 };
 
 var unshift = function unshift(x,v) {
   x.unshift(v);
-  let mon = new Monad(x);
-  return mon;
+  return ret(x);
 };
 
-var clean = function clean(x) {
-    console.log('Before cleanx ', x);
-    let cleanX = x.filter(x => (x !== "" && x !== undefined));
-    console.log('After cleanX ', cleanX);
-    mM9.ret(cleanX.length);
-    let mon = new Monad(cleanX);
-    return mon;
-};
-  
 var toFloat = function toFloat(x) {
   var newx = x.map(function (a) {
     return parseFloat(a);
   });
-  let mon = new Monad(newx);
-  return mon;
+  return ret(newx);
 };
 
 var splice = function splice(x,i) {
   let ar = x.splice(i,1);
-  let mon = new Monad(ar);
-  return mon;
+  return ret(ar);
 }
 
 var pop = function pop(x) {
   let v = x[x.length - 1];
   console.log('In pop. v = ',v);
-  let mon = new Monad(v);
-  return mon;
+  return ret(v);
 }
 
 var next = function next(x,y,mon2) {
   if (x === y) {
     mon2.release();
   }
-  let mon = new Monad(x);
-  return mon
+  return ret(x);
 }
 
 var next2 = function next(x,condition,mon2) {
   if (condition) {
     mon2.release();
   }
-  let mon = new Monad(x);
-  return mon
-}
-
-var addObj = function addObj(a,mon,key,val) {
-  mon.x[key] = val;
-  return mon;
+  return ret(x);
 }
 
 var hyp = function hyp(x,y) {
   return Math.sqrt(x*x + y*y);
 };
 
-var test2 = function test2() {
-  let k = 0;
-  let j = 0;
-  mM4.ret({});
-  for (j=0; j<101; j+=1) {
-    for (k=0; k<50000; k+=1) {
-      mMZ7.bnd(() => mM4
-      .bnd(addObj, j, [j,k]))
-      mM3.bnd(next, ((hyp(j,k) - Math.floor(hyp(j,k))) === 0), mMZ7)
-    }
-  }
-  return mM4.x;
-}
-
 var doub = function doub(v) {
-  let mon = new Monad(v + v);
-  return mon;
+  return ret(v + v);
 };
 
 var square = function square(v) {
-  let mon = new Monad(v * v);
-  return mon;
+  return ret(v * v);
 };
 
 var mult = function mult(x, y) {
-  let mon = new Monad(x * y);
-  return mon;
+  return ret(x * y);
 };
-
 
 var cu = function cu(x) {
   return x * x * x;
@@ -267,22 +226,10 @@ var log = function log(x,message) {
   return mon;
 };
 
-var test5 = function test5(m) {
-  var x = m.x;
-  m.ret(x + 3).bnd(add, 1).bnd(mMS2.ret).bnd(add, 1).bnd(doub);
-};
-
-var test6 = function test6() {
-  mMS1.ret(3).fmap(ad, mMS2, mMS1.x).fmap(du).fmap(ad, mM1, mMS1.x).fmap(cu).fmap(id, mMS3).bnd(add, mMS2.x + 1000);
-};
-
-var delay = function delay(x, mon) {
+var dVelay = function delay(x, mon) {
   return new Promise(function (resolve, reject) {
     setTimeout(resolve, 2000);
   });
 };
 
-var increment = function increment() {
-  VAL = VAL + 1;
-};
 

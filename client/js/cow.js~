@@ -112,16 +112,14 @@ var next = function next(x,y,mon2) {
   if (x === y) {
     mon2.release();
   }
-  let mon = new Monad(x);
-  return mon
+  return ret(x);
 }
 
 var next2 = function next(x,condition,mon2) {
   if (condition) {
     mon2.release();
   }
-  let mon = new Monad(x);
-  return mon
+  return ret(x);
 }
 
 var score = function(v,j) {
@@ -139,8 +137,7 @@ var score2 = function score2() {
 
 var newRoll = function(v) {
   socket.send(\`CA#$42,${Group},${Name},6,6,12,20\`);
-  let mon = new Monad(v);
-  return mon;
+  return ret(v);
 };
 }  `
 );  
@@ -268,8 +265,7 @@ const next = h('pre', {style: {color: '#AFEEEE' }},
     if (bool) {
       mon2.release();
     }
-    let mon = new Monad(x);
-    return mon
+    return ret(x);
   }  `
 );  
 

@@ -108,7 +108,6 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
       h('p', '  '  ),
       h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: updateRoll }, style: styleRoll },
                      `ROLL`   ),
-      h('p', {style: styleRoll}, 'Now click ROLL. '  ),
       h('p', 'When you click a number, it disappears. After two numbers and an operator have been selected, in any order, a computation is performed and the result is placed at the end of the numbers row. Now there are three numbers. After another round, two are left and finally, the last computation can be performed. ',  ),
       h('p', 'You can click ROLL repeatedly and the Haskell server will obligingly provide new numbers. The numbers simulate the roll of four dice; two six-sided, one twelve-sided, and one twenty-sided. Clicking ROLL forfeits one point, but this can be advantageous, as when it places you within 1 or 3 points from a multiple of 5 (and a 5 point jump to the next multiple of 5).  '  ),
       h('p', {style: {color: '#EEBBBB'}}, 'RULES: Every time you click ROLL, you lose one point. Every time you compute the number 20, you gain one point. Every time you compute "18", you gain three points. Whenever your score becomes 0 mod 5 (-5, 0, 5, 10, 15, ...) you gain 5 points. When your score becomes 25, you gain one goal. The first player to acheive three goals wins. ' ),
@@ -284,8 +283,7 @@ var winner = function winner() {
 
 var newRoll = function(v) {
   socket.send(`CA#$42,${Group},${Name},6,6,12,20`);
-  let mon = new Monad(v);
-  return mon;
+  return ret(v);
 };
 
 function updateCalc() { 
@@ -342,14 +340,12 @@ function updateFocus() {
 
 var displayOff = function displayOff(x,a) {
     document.getElementById(a).style.display = 'none';
-    let mon = new Monad(x);
-    return mon;
+    return ret(x);
 };
 
 var displayInline = function displayInline(x,a) {
     document.getElementById(a).style.display = 'inline';
-    let mon = new Monad(x);
-    return mon;
+    return ret(x);
 };
 
 function updateNumbers() {
@@ -794,8 +790,7 @@ var update = function update(v) {
   mM10.x, mM11.x, mM12.x, mM13.x, mM14.x, mM15.x, mM16.x, mM17.x, 
   mM18.x, mM19.x, mMZ1.x, mMZ2.x, mMZ3.x, mMZ4.x, mMZ5.x, mMZ6.x, mMZ7.x, mMZ8.x, mMZ9.x);
   oldVnode = patch(oldVnode, newVnode);
-  let mon = new Monad(v);
-  return mon;
+  return ret(v);
 }
 
 
