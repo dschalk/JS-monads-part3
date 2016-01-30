@@ -100,6 +100,14 @@ Here are the definitions of "next" and "next2":
 ```
 Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, functions are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released causing the function p to execute. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p is called. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
 
+"ret" is the similar to "return" in Haskell. For all values v, monads m, and functions f mapping values to monads, ret(v).bnd(f) === f(v) and m.bnd(ret) = m. The definition of "ret" is 
+```javascript
+var ret = function ret(v) {
+  var mon = new Monad(v, 'anonymous');
+  return mon;
+}
+```
+And similar to Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). But this project isn't about category theory; it is about organizing javascript code into concise, maintainable chains and trees of operations, as the game example demonstrates. It, along with two other examples, are demonstrated online at [schalk.net:9003](http://schalk.net:9003).
 ##Some Elementary Operations
 Anonymous monads can be created by the function "ret", defined as follow:
 ```javascript
