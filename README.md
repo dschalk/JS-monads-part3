@@ -109,23 +109,16 @@ var ret = function ret(v) {
 ```
 And similar to Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). But this project isn't about category theory; it is about organizing javascript code into concise, maintainable chains and trees of operations, as the game example demonstrates. It, along with two other examples, are demonstrated online at [schalk.net:3093](http://schalk.net:3093).
 ##Some Elementary Operations
-Anonymous monads can be created by the function "ret", defined as follow:
-```javascript
-var ret = function ret(v) {
-  var mon = new Monad(v, 'anonymous');
-}
-```
-For example, ret(a).bnd(f).bnd(m.ret) re-assigns monad m's identifier "m" to a new monad with a value of f(a). 
+For any monad m and function f mapping values to monads:
+m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-asigned to a new monad with the same value as m; i.e., m.x.
 
-m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-directed to a new monad with value m.x.
+m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of f(m.x).
 
-m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of  f(m.x).
-
-m.bnd(f).bnd(m.ret) re-assigns the identifier "m" to a new monad with a value of f(m.x).
+m.bnd(f).bnd(m.ret) seems to change m's value, m.x, to f(m.x), by re-assigning the identifier "m" to a new monad with a value of f(m.x).
 
 m.bnd(x => m2.bnd(y => m3.bnd(z => m4.ret(f(x,y,z)) leaves m, m2, and m3 unchanged, but provides their values as arguments to f, giving mM4 the value f(mM1.x, mM2.x, mM3.x). That result could also be accomplished by simply running ret(f(mM1.x, mM2.x, mM3.x)).bnd(mM4.ret) (see "m.bnd(mM2.ret)" above).
 
-The method "bnd" accepts functions that return values instead of monads. For example, mM1.ret(4).bnd(x => x\*x\*x) returns the number 64.
+"bnd()" is designed to take as arguments functions mapping values to monads, but functions mapping values to values also work. For example, ret(4).bnd(x => x\*x\*x) returns the number 64.
 
 
 ##Caution
