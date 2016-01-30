@@ -107,7 +107,7 @@ var ret = function ret(v) {
   return mon;
 }
 ```
-And similar to Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). But this project isn't about category theory; it is about organizing javascript code into concise, maintainable chains and trees of operations, as the game example demonstrates. It, along with two other examples, are demonstrated online at [schalk.net:9093](http://schalk.net:9093).
+And similar to Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). But this project isn't about category theory; it is about organizing javascript code into concise, maintainable chains and trees of operations, as the game example demonstrates. It, along with two other examples, are demonstrated online at [schalk.net:3093](http://schalk.net:3093).
 ##Some Elementary Operations
 Anonymous monads can be created by the function "ret", defined as follow:
 ```javascript
