@@ -29,47 +29,35 @@ const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
 const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
     constructor() {
 
-      this.flag = false;
       this.p = function() {};
 
-      this.block = () => {
-        this.flag = true;
-        return this;
-      }
-
       this.release = () => {
-        this.flag = false;
-        this.p();
+        return this.p();
       }
  
       this.bnd = func => {
-        if (this.flag === false) {
-          func();
-        }
-        if (this.flag === true) {
           this.p = func;
-        }
       }
     }
   }
 ` );  
 
 const steps = h('pre', {style: {color: '#AFEEEE' }}, 
-`  function updateSteps(event) {
-      mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)
-       .bnd(() => mM1.ret('Click the mMZ2.release() button to proceed')
-       .bnd(() => mMZ2.block()
-       .bnd(() => mM2.ret('Click it again.')
-       .bnd(() => mMZ2.block()
-       .bnd(() => mM3.ret('Keep going')
-       .bnd(() => mMZ2.block()
-       .bnd(() => mM4.ret('One more')
-       .bnd(() => mMZ2.block()
-       .bnd(() => mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret)
-       .bnd(mM4.ret)
-        ))))))))) 
-      oldVnode = patch(oldVnode, newVnode());
-  }  ` 
+`  function updateSteps() {
+    mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)
+     .bnd(() => mM1.ret('Click the mMZ2.release() button to proceed')
+     .bnd(() => mMZ2
+     .bnd(() => mM2.ret('Click it again.')
+     .bnd(() => mMZ2
+     .bnd(() => mM3.ret('Keep going')
+     .bnd(() => mMZ2
+     .bnd(() => mM4.ret('One more')
+     .bnd(() => mMZ2
+     .bnd(() => mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret)
+     .bnd(mM4.ret)
+      ))))))))) 
+  oldVnode = patch(oldVnode, newVnode()); 
+}  ` 
 );  
 
 const dice = h('pre', {style: {color: '#AFEEEE' }}, 
@@ -89,22 +77,21 @@ function updateOp(e) {
 
 function updateCalc() { 
   ret('start').bnd(() => (
-      ( mMZ2.block().bnd(() => mM13
+      ( mMZ2.bnd(() => mM13
                     .bnd(score,1)
                     .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
                     .bnd(newRoll)) ),
-      ( mMZ4.block().bnd(() => mM13
+      ( mMZ4.bnd(() => mM13
                     .bnd(score,3)
                     .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
                     .bnd(newRoll)) ),
-          ( mMZ5.block().bnd(() => mM13
+          ( mMZ5.bnd(() => mM13
                         .bnd(score,5)
                         .bnd(next, 25, mMZ6)
                         .bnd(newRoll)) ),
-              ( mMZ6.block().bnd(() => mM13
-                            .bnd(score2) 
-                            .bnd(() => mMgoals.bnd(next,3,mMZ7))) ),
-                  (mMZ7.block().bnd(() => mM13.bnd(winner)) ),                 
+              ( mMZ6.bnd(() => mM9.bnd(score2) 
+                            .bnd(next,3,mMZ7)) ),
+                  (mMZ7.bnd(() => mM13.bnd(winner)) ),                 
       (mM3.bnd(x => mM7
                     .ret(calc(x[0], mM8.x, x[1]))
                     .bnd(next, 18, mMZ4)
@@ -139,13 +126,15 @@ var next2 = function next(x,condition,mon2) {
 
 var score = function(v,j) {
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 0);
-  return mM13.ret(v + j);
+  return ret(v + j);
 }
 
 var score2 = function score2() {
-  let j = -25
+  mMgoals.ret(mMgoals.x + 1);
+  let j = -25;
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 1);
-  return mM13.ret(0);
+  mM13.ret(0);
+  return mMgoals;
 }
 
 var newRoll = function(v) {
@@ -254,7 +243,6 @@ const numbers3 = h('pre', {style: {color: '#AFEEEE' }},
 
 const pause = h('pre', {style: {color: '#AFEEEE' }}, 
 `  var pause = function(x,t,mon2) {
-    mon2.block();
     let time = t*1000;
     setTimeout( function() {
       mon2.release();
@@ -265,7 +253,7 @@ const pause = h('pre', {style: {color: '#AFEEEE' }},
 );
 
 const pauseDemo = h('pre', {style: {color: '#AFEEEE' }}, 
-`  function updatePauseDemo() {
+`  function pauseDemo() {
     mM1.ret("Wait two seconds.")
       .bnd(update)
       .bnd(pause,2,mMZ1)

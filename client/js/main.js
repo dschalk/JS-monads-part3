@@ -65,9 +65,9 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
     [ h('div', [
       h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}, on: {click: updateFocus}}, 'Game/Chat'  ),
     ] ),
-      h('h1', {style: {textAlign: 'center', color: '#ffba66'}}, 'JS-monads-part3'),
+      h('h1', 'JS-monads-part3'),
       h('br'),  
-      h('span', 'This is the third page in the new Javascript Monads series. Links to the detailed explanations of the basic monad constructor, "Monad" and its methods and the arguments they take can be found at '),
+      h('span',  {style: {fontStyle: 'italic ' }}, 'This is the third page in the new Javascript Monads series. Links to the detailed explanations of the basic monad constructor, "Monad" and its methods and the arguments they take can be found at '),
       h('a', {props: {href: 'http://schalk.net' },  style: {color: '#EECCFF'}},' http://schalk.net'), 
       h('span', ' and a code repo at '),
       h('a', {props: {href: 'https://github.com/dschalk?tab=repositories'}, style: {color: '#EECCFF'}}, ' github repos' ),
@@ -79,6 +79,7 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
       h('p', { props: { id: 'signin' }}, 'To see a simple use of MonadIter, clickk the following button and then click the mMZ2.release() button four times.'  ),
       h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: updateSteps }, style: style4},
             [ cow.steps ],  ),
+      h('p', 'Each time mMZ2 gets released, mMZ2.p executes and is assigned the value of the argument to the next occurance of mMZ2.bnd(). That newly acquired value is a function that executes the next time mMZ2.release() is called, repeating the process down the lines of code until finally, everything gets re-set to the starting point. ' ), 
       h('p', {props: {id: 'rules'}}, ),    
       h('br', ),    
       h('button', {on: { mouseenter: update6e, mouseleave: update6l, click: updateNext }, style: style6}, [ cow.updateNext ],  ),  
@@ -110,30 +111,25 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
       h('p', {style: styleRoll}, 'Now click ROLL. '  ),
       h('p', 'When you click a number, it disappears. After two numbers and an operator have been selected, in any order, a computation is performed and the result is placed at the end of the numbers row. Now there are three numbers. After another round, two are left and finally, the last computation can be performed. ',  ),
       h('p', 'You can click ROLL repeatedly and the Haskell server will obligingly provide new numbers. The numbers simulate the roll of four dice; two six-sided, one twelve-sided, and one twenty-sided. Clicking ROLL forfeits one point, but this can be advantageous, as when it places you within 1 or 3 points from a multiple of 5 (and a 5 point jump to the next multiple of 5).  '  ),
-      h('p', {style: {color: '#EEBBBB'}}, 'RULES: You get one goal for reaching the number 25. Here\'s how you get there: Every time you compute the number 20, mM13.x (your score) gets incremented by 1. Every time you compute "18", your score increases by 3. Every time your score becomes 0 mod 5 (-5, 0, 5, 10, 15, ...) you get 5 more points. When you click ROLL you lose one point. The first player to score 3 goals wins.' ),
-      h('p', 'HINTS: The best way to get off to a good start is to click ROLL and drop your score down to -1. Then if you score 1 point you hit zero and jump to 5. If you score 18 twice in a row you got to 2 and then jump from 5 to 10. A score of 10 in three computations! There are only two ways to score a goal. Either compute 18 when your score is 17, or compute 20 when your score is 19. You can\'t get to 25 from 22 or 24 because you get one, and only one jump when you hit a multiple of 5. Computing 20 jumps you to 25. Computing 25 jumps you to 30. No goal; your score isn\'t 25. '  ),
+      h('p', {style: {color: '#EEBBBB'}}, 'RULES: Every time you click ROLL, you lose one point. Every time you compute the number 20, you gain one point. Every time you compute "18", you gain three points. Whenever your score becomes 0 mod 5 (-5, 0, 5, 10, 15, ...) you gain 5 points. When your score becomes 25, you gain one goal. The first player to acheive three goals wins. ' ),
+      h('p', 'HINTS: You can get off to a good start by clicking ROLL, dropping down to a score of -1. Then if you score 1 point you hit zero and jump to 5. However, computing 20 twice, or 18 and then clicking ROLL, puts you within range of 5, and a jump to 10 points. There are only two ways to score a goal. Either compute the number 18 when your score is 17, or compute 20 when your score is 19. Either of those hits 20 and jumps to 25. You can\'t get to 25 from 22 or 24 because hitting 25 jumps you to 30, and you don\'t score a goal for having a score of 30.  '  ),
         
-h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectively. They call updateCalc. updateCalc (below) clearly displays the flow of the application. First, mMZ2, mMZ4, mMZ5, and mMZ6 get locked, storing the code that might eventually get executed in their "p" attribute arrays. Then, in the third part of the tupple, tests are performed that might release the code being held in the four MonadIter instances. Here is some of the operative code:' ),
+h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectively. They call updateCalc. updateCalc (below) displays the flow of the application. First, mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7 get locked, storing the function that might eventually as the value of their "p" attribute attributes. Then, in the third part of the tupple, tests are performed that might release the code being held in the five MonadIter instances. Here is some of the operative code:' ),
       cow.dice,
-      h('p', 'When numbers are clicked, they get pushed into mM3.x, an array after that is emptied after each roll of the dice. When an operator is clicked, it replaces "0" as the value of mM8. So when mM3.x.length === 2 and mM8.x !== 0, updateNums and updateOp are coded to request a new roll from the server. '  ),
+      h('p', 'When numbers are clicked, they get pushed into mM3.x, an array which is emptied after each roll of the dice. When an operator is clicked, it replaces "0" as the value of mM8. So when mM3.x.length === 2 and mM8.x !== 0, it\'s time to call updateNums, which is what updateOp are coded to do. mM7 takes the number returned from updateCalc and tests whether it is 18 or 20. If it is, the appropriate MonadIter instance is released. It hands control over to mM13, the monad that keeps the score throughout the game, and mM13 uses "next2" to test whether the number is 0 mod 5. If the number is 0 mod 5, mMZ5 is released, handing control over to mM13 again, and mM13 runs the function "next", releaseing mMZ6 if the mM13.x ===  25 is true. If it is, mMZ6 is released, handing control over to mMgoals. mMgoals again haver to mM13 which '  ),
    h('p', 'MonadIter instances together with the function "pause" provide a way to delay progress along a chain. "pause" is defined as follows:'),
         cow.pause, 
    h('p', 'If you click the button below, some monads will update two seconds later. '  ),
-   h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: updatePauseDemo }, style: style4},
+   h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: pauseDemo }, style: style4},
             [ cow.pauseDemo ],  ),
-      h('p', 'Using "bnd" with "next", any monad can release any block. At any link, a chain of monads can divide into 2, 3, or any number of chains going there separate ways but still communicating with one another. '  ),
-      h('div', 'When you log in, the monad column on the right disappears and a scoreboard and chat section open up. You can\'t compete or chat as long as you remain in the default group "solo", even if other people are in group "solo". But if you change to, say, group "chat54" in two separate browser windows, you will see that both windows share rolls of the dice and chat messages they enter. People in separate locations can agree on a group name and compete and chat. If the name is cryptic, something like "c#*&%@@9J#lu88", the chat and the game will likely remain private. If you change to group "test", you might encounter me mucking about on this page, or maybe someone else looking for company by changing to group "test".  '  ),
-      h('span', {style: inputStyle1}, 'You will need a socket in order to participate in chats and play the game. A socket is created when you log in. '  ),
-      h('br'),
-      h('span',  {style: inputStyle1}, 'Enter some name here: ' ),  
-      h('input', {style: inputStyle1, on: {keydown: updateLogin},  } ),
-      h('h2', {style: {textAlign: 'center', color: '#ffba66'}}, 'Dynamic List Display' ),
+      h('h2',  'Dynamic List Display' ),
       h('p', 'The lists of group members and their scores, and the lists of messages broadcast within each group, are subject to change as scores change and players join or leave the group, and as messages get sent and broadcast to the group. When a group member\'s score changes and when a group member sends a message, the information goes to the server and the server broadcasts the updated state (maintained in a Haskell TMVar) to all group members. In socket.onmessage, the incoming messages are sorted according to their prefixes in a switch block and if the message is a scoreboard update or chat message, one of the following functions is called: ' ),
       cow.messages1,
       h('p', 'And here are the functions which get called: '  ),
       cow.messages2, 
-        h('br' ),
-        h('br' ),
+      h('h2', 'About User Interactions' ),
+      h('p', 'When you log in, the monad column on the right disappears and a scoreboard and chat section open up. You can\'t compete or chat as long as you remain in the default group "solo", even if other people are in group "solo". But if you change to, say, group "chat54" in two separate browser windows, you will see that both windows share rolls of the dice and chat messages they enter. People in separate locations can agree on a group name and compete and chat. If the name is cryptic, something like "c#*&%@@9J#lu88", the chat and the game will likely remain private. If you change to group "test", you might encounter me playing the game, or you might encounter someone else who changed their group to "test".  '  ),
+      h('br' ),
       h('span', 'The repository for this open source project is at ' ),
       h('a', {props: {href: 'https://github.com/dschalk?tab=repositories'}, style: {color: '#FFEBCD'}}, 'github.com/dschalk' ),
       h('span', '. Parts 1 and 2 of this series are running online. Links are at: ' ),
@@ -205,7 +201,7 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('span', 'mMnbrs.x: '),
         h('span', {style: styleM}, '  ' + mMnbrs),
         h('br'),
-        h('h2', {style: {color: '#ffba66'}}, mMgoals2.x ),
+        h('h2', mMgoals2.x ),
         h('br'),
         h('br'),
         h('button', {on: { mouseenter: updateRe, mouseleave: updateRl, click: updateR }, style: styleR},
@@ -243,7 +239,7 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('span', {style: {color: '#FF0000', fontSize: '32px' }}, mM13.x ),  
         h('br' ),
         h('br'),
-        h('h2', {style: {color: '#ffba66'}}, mMgoals2.x ),
+        h('h2', mMgoals2.x ),
         h('br'),
         ]) 
       ])
@@ -267,15 +263,15 @@ function update0() {
 
 var score = function score(v,j) {
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 0);
-  mM13.ret(v + j);
-  return ret(v + j);
+  return mM13.ret(v + j);
 }
 
 var score2 = function score2() {
-  let j = -25
   mMgoals.ret(mMgoals.x + 1);
+  let j = -25;
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 1);
-  return mM13.ret(0);
+  mM13.ret(0);
+  return mMgoals;
 }
 
 var winner = function winner() {
@@ -294,22 +290,21 @@ var newRoll = function(v) {
 
 function updateCalc() { 
   ret('start').bnd(() => (
-      ( mMZ2.block().bnd(() => mM13
+      ( mMZ2.bnd(() => mM13
                     .bnd(score,1)
                     .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
                     .bnd(newRoll)) ),
-      ( mMZ4.block().bnd(() => mM13
+      ( mMZ4.bnd(() => mM13
                     .bnd(score,3)
                     .bnd(next2, ((mM13.x % 5) === 0), mMZ5) 
                     .bnd(newRoll)) ),
-          ( mMZ5.block().bnd(() => mM13
+          ( mMZ5.bnd(() => mM13
                         .bnd(score,5)
                         .bnd(next, 25, mMZ6)
                         .bnd(newRoll)) ),
-              ( mMZ6.block().bnd(() => mM13
-                            .bnd(score2) 
-                            .bnd(() => mMgoals.bnd(next,3,mMZ7))) ),
-                  (mMZ7.block().bnd(() => mM13.bnd(winner)) ),                 
+              ( mMZ6.bnd(() => mM9.bnd(score2) 
+                            .bnd(next,3,mMZ7)) ),
+                  (mMZ7.bnd(() => mM13.bnd(winner)) ),                 
       (mM3.bnd(x => mM7
                     .ret(calc(x[0], mM8.x, x[1]))
                     .bnd(next, 18, mMZ4)
@@ -426,7 +421,7 @@ function updateMessage(e) {
   }
 }
 
-function updatePauseDemo() {
+function pauseDemo() {
   mM1.ret("Wait two seconds.")
     .bnd(update)
     .bnd(pause,2,mMZ1)
@@ -450,13 +445,13 @@ function updateR() {
 function updateSteps() {
     mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)
      .bnd(() => mM1.ret('Click the mMZ2.release() button to proceed')
-     .bnd(() => mMZ2.block()
+     .bnd(() => mMZ2
      .bnd(() => mM2.ret('Click it again.')
-     .bnd(() => mMZ2.block()
+     .bnd(() => mMZ2
      .bnd(() => mM3.ret('Keep going')
-     .bnd(() => mMZ2.block()
+     .bnd(() => mMZ2
      .bnd(() => mM4.ret('One more')
-     .bnd(() => mMZ2.block()
+     .bnd(() => mMZ2
      .bnd(() => mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret)
      .bnd(mM4.ret)
       ))))))))) 

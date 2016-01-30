@@ -11,26 +11,14 @@ var MonadIter = function MonadIter() {
 
   _classCallCheck(this, MonadIter);
 
-  this.flag = false;
   this.p = function() {};
 
-  this.block = function () {
-    _this.flag = true;
-    return _this;
-  };
-
   this.release = function () {
-    _this.flag = false;
-    _this.p();
+    return _this.p();
   };
 
   this.bnd = function (func) {
-    if (_this.flag === false) {
-      func();
-    }
-    if (_this.flag === true) {
       _this.p = func;
-    }
   };
 };
 
@@ -152,7 +140,6 @@ var calc = function calc(a,op,b) {
 };
 
 var pause = function(x,t,mon2) {
-  mon2.block();
   let time = t*1000;
   setTimeout( function() {
     mon2.release();
@@ -235,7 +222,7 @@ var test2 = function test2() {
   mM4.ret({});
   for (j=0; j<101; j+=1) {
     for (k=0; k<50000; k+=1) {
-      mMZ7.block().bnd(() => mM4
+      mMZ7.bnd(() => mM4
       .bnd(addObj, j, [j,k]))
       mM3.bnd(next, ((hyp(j,k) - Math.floor(hyp(j,k))) === 0), mMZ7)
     }
