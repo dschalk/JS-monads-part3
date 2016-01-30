@@ -110,6 +110,7 @@ var ret = function ret(v) {
 And similar to Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). But this project isn't about category theory; it is about organizing javascript code into concise, maintainable chains and trees of operations, as the game example demonstrates. It, along with two other examples, are demonstrated online at [schalk.net:3093](http://schalk.net:3093).
 ##Some Elementary Operations
 For any monad m and function f mapping values to monads:
+
 m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-asigned to a new monad with the same value as m; i.e., m.x.
 
 m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of f(m.x).
