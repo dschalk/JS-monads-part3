@@ -61,7 +61,7 @@ var oldVnode = document.getElementById('placeholder');
 function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, 
                 m12, m13, m14, m15, m16, m17, m18, m19, mI1, mI2, mI3, mI4, mI5, mI6, mI7, mI8, mI9) { 
   return h('div',{style: style3}, 
-   [  h('div',{style: { width: '60%', textAlign: 'left', marginLeft: 40, marginRight: '17%', fontSize: '20px'}}, 
+   [  h('div',{style: { width: '60%', textAlign: 'left', marginLeft: 40, marginRight: '17%', fontSize: '22px'}}, 
     [ h('div', [
       h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}, on: {click: updateFocus}}, 'Game/Chat'  ),
     ] ),
@@ -199,11 +199,6 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('br'),
         h('span', 'mM19.x: '),
         h('span', {style: styleM}, '  ' + m19),
-        h('br'),
-        h('span', 'mMnbrs.x: '),
-        h('span', {style: styleM}, '  ' + mMnbrs),
-        h('br'),
-        h('h2', mMgoals2.x ),
         h('br'),
         h('br'),
         h('button', {on: { mouseenter: updateRe, mouseleave: updateRl, click: updateR }, style: styleR},

@@ -64,9 +64,9 @@ const dice = h('pre', {style: {color: '#AFEEEE' }},
 `function updateNums(e) {
     mM3
     .bnd(push,e.target.textContent)
-    .bnd(() => {mM1.x[e.target.value] = ""; return ret('temp');})
-    .bnd(update)
-    updateCalc();
+    .bnd(() => {mM1.x[e.target.value] = "";})
+    if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
+    update0();
 }
 
 function updateOp(e) {
@@ -102,8 +102,7 @@ function updateCalc() {
                     .ret([])
                     .bnd(() => mM4
                     .ret(0).bnd(mM8.ret)
-                    .bnd(() => mM5.ret('Done')
-                    .bnd(update) ))))) ) 
+                    .bnd(update) )))) ) 
   ))     
 }
 
