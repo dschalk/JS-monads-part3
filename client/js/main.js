@@ -6,8 +6,6 @@ import h from 'snabbdom/h';
 
 var Group = 'solo';
 var Name;
-var afocus = {autofocus: false};
-var signinFocus = {autofocus: false};
 
 var updateScoreboard = function updateScoreboard(v) {
   mMscoreboard.ret([]);
@@ -63,7 +61,7 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
   return h('div',{style: style3}, 
    [  h('div',{style: { width: '60%', textAlign: 'left', marginLeft: 40, marginRight: '17%', fontSize: '22px'}}, 
     [ h('div', [
-      h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}, on: {click: updateFocus}}, 'Game/Chat'  ),
+      h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}}, 'Game/Chat'  ),
     ] ),
       h('h1', 'JS-monads-part3'),
       h('br'),  
@@ -88,7 +86,7 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
       h('h2', 'Independent Branches'  ),
       h('p', 'In updateCalc (below), an anonymous monad calls its bnd() method on a function that returns a tupple of six independent branches, five of which start with instances of MonadIter. The sixth member of the tupple performs a computation and determines whether mMZ2 or mMZ4 (or neither) should be released. Depending on the current score, mMZ2 or mMZ4 might initiate execution down part or all of the remainder of a shared chain. '),
       h('p', {style: inputStyle1}, 'In order to create a unique socket, please enter some name.'  ),
-      h('input', { on: {keydown: updateLogin, click: updateFocus}, style: inputStyle1, props: {signinFocus }} ),
+      h('input', { on: {keydown: updateLogin}, style: inputStyle1, } ),
       h('button', {on: { mouseenter: update8e, mouseleave: update8l, click: updateNums }, props: {value: 0, id: '0'}, style: style8},
             m1[0]   ),
       h('button', {on: { mouseenter: update9e, mouseleave: update9l, click: updateNums }, props: {value: 1, id: '1'}, style: style9},
@@ -215,7 +213,7 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('a', { props: {href: '#rules'}, style: {color: '#FFBBBB'}}, 'Game Rules'  ),
         h('br', ),    
         h('span', 'Change group: '  ),   
-        h('input', {style: messageStyle, on: {keydown: updateGroup}, props: afocus } ),
+        h('input', {style: messageStyle, on: {keydown: updateGroup} } ),
         
         h('br', ),           
         h('div', `Group: ${Group}` ),
@@ -329,11 +327,6 @@ function updateOp(e) {
   if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
 }
 
-function updateFocus() {
-  signinFocus = {autofocus: true};
-  update0();
-}
-
 var displayOff = function displayOff(x,a) {
     document.getElementById(a).style.display = 'none';
     return ret(x);
@@ -378,7 +371,6 @@ function updateLogin(e) {
        linkStyle = {display: 'block'};
        mM3.ret([]).bnd(mM2.ret);
        e.target.value = '';
-       afocus = {autofocus: true};
        update0();
      }
 }
