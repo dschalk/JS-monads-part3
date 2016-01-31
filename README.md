@@ -37,7 +37,6 @@ The flow of the interactive websockets game running at [http://schalk.net:3093](
                       .ret([])
                       .bnd(() => mM4
                       .ret(0).bnd(mM8.ret)
-                      .bnd(() => mM5.ret('Done')
                       .bnd(update) ))))) ) 
     ))     
   }
