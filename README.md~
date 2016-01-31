@@ -99,14 +99,14 @@ Here are the definitions of "next" and "next2":
 ```
 Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, functions are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released causing the function p to execute. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p is called. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
 
-"ret" is the similar to "return" in Haskell. For all values v, monads m, and functions f mapping values to monads, ret(v).bnd(f) === f(v) and m.bnd(ret) = m. The definition of "ret" is 
+This project is not about mathematics, it is about controlling the flow of actions in web applications. However,the function "ret" does happen to be similar to "return" in Haskell. For any value v, ret(v) returns a monad with value v, and for all monads m, and functions f mapping values to monads, ret(v).bnd(f) === f(v) and m.bnd(ret) = m. Also, like Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). I find these facts to be reassuring, and they help explain why the monads are robust and versitile. Here is the definition of "ret():
 ```javascript
 var ret = function ret(v) {
   var mon = new Monad(v, 'anonymous');
   return mon;
 }
 ```
-And similar to Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). But this project isn't about category theory; it is about organizing javascript code into concise, maintainable chains and trees of operations, as the game example demonstrates. It, along with two other examples, are demonstrated online at [schalk.net:3093](http://schalk.net:3093).
+The game example (above) shows MonadIter instances being used in independent branches. It, along with an example of a single MondadIter instance helping control movement along a four-stage progression, are running online at [schalk.net:3093](http://schalk.net:3093).
 ##Some Elementary Operations
 For any monad m and function f mapping values to monads:
 
