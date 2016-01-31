@@ -61,7 +61,7 @@ var oldVnode = document.getElementById('placeholder');
 function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, 
                 m12, m13, m14, m15, m16, m17, m18, m19, mI1, mI2, mI3, mI4, mI5, mI6, mI7, mI8, mI9) { 
   return h('div',{style: style3}, 
-   [  h('div',{style: { width: '60%', textAlign: 'left', marginLeft: 40, marginRight: '17%', fontSize: '20px'}}, 
+   [  h('div',{style: { width: '60%', textAlign: 'left', marginLeft: 40, marginRight: '17%', fontSize: '22px'}}, 
     [ h('div', [
       h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}, on: {click: updateFocus}}, 'Game/Chat'  ),
     ] ),
@@ -76,15 +76,18 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
       cow.monad,
       h('p', 'And here is MonadIter: ' ),
       cow.monadIter,
+      h('h2', 'Controlled Sequence' ),
       h('p', { props: { id: 'signin' }}, 'To see MonadIter in action, click the following button and then click the mMZ2.release() button four times.'  ),
       h('button', {on: { mouseenter: update4e, mouseleave: update4l, click: updateSteps }, style: style4},
             [ cow.steps ],  ),
-      h('p', 'Each time mMZ2 gets released, mMZ2.p executes and is assigned the value of the argument to the next occurance of mMZ2.bnd(). That newly acquired value is a function that executes the next time mMZ2.release() is called, repeating the process down the lines of code until finally, everything gets re-set to the starting point. ' ), 
+      h('p', 'Each time mMZ2 gets released, mMZ2.p executes down to the next occurance of mMZ2 where mMZ2.p takes on the value of the code that follows. That newly acquired value is a function that executes the next time mMZ2.release() is called, repeating the process down the lines of code until finally, everything gets re-set to the starting point. ' ), 
       h('p', {props: {id: 'rules'}}, ),    
       h('br', ),    
       h('button', {on: { mouseenter: update6e, mouseleave: update6l, click: updateNext }, style: style6}, [ cow.updateNext ],  ),  
       h('br', ),    
-      h('p', {style: inputStyle1}, 'Now, a demonstration of monads handling websockets messages. In order to create a unique socket, please enter some name.'  ),
+      h('h2', 'Independent Branches'  ),
+      h('p', 'In updateCalc (below), an anonymous monad calls its bnd() method on a function that returns a tupple of six independent branches, five of which start with instances of MonadIter. The sixth member of the tupple performs a computation and determines whether mMZ2 or mMZ4 (or neither) should be released. Depending on the current score, mMZ2 and mMZ4 might initiate execution down part or all of the remainder of a shared chain. '),
+      h('p', {style: inputStyle1}, 'In order to create a unique socket, please enter some name.'  ),
       h('input', { on: {keydown: updateLogin, click: updateFocus}, style: inputStyle1, props: {signinFocus }} ),
       h('button', {on: { mouseenter: update8e, mouseleave: update8l, click: updateNums }, props: {value: 0, id: '0'}, style: style8},
             m1[0]   ),
@@ -196,11 +199,6 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('br'),
         h('span', 'mM19.x: '),
         h('span', {style: styleM}, '  ' + m19),
-        h('br'),
-        h('span', 'mMnbrs.x: '),
-        h('span', {style: styleM}, '  ' + mMnbrs),
-        h('br'),
-        h('h2', mMgoals2.x ),
         h('br'),
         h('br'),
         h('button', {on: { mouseenter: updateRe, mouseleave: updateRl, click: updateR }, style: styleR},
@@ -320,12 +318,11 @@ function updateCalc() {
 }
 
 function updateNums(e) {
-  mM2.ret([e.target.value, e.target.textContent]) 
-  .bnd(() => mM3)
-  .bnd(push,mM2.x[1])
-  .bnd(() => {mM1.x[mM2.x[0]] = ""; return mM5;})
-  .bnd(update)
-  if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
+    mM3
+    .bnd(push,e.target.textContent)
+    .bnd(() => {mM1.x[e.target.value] = "";})
+    if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
+    update0();
 }
 
 function updateOp(e) {
@@ -435,7 +432,8 @@ function updateGroup(e) {
 
 function updateR() {
   mM1.ret([]).bnd(mM2.ret).bnd(mM3.ret).bnd(() => mM4.ret(0)).bnd(mM5.ret)
-  .bnd(mM6.ret).bnd(mM7.ret).bnd(mM8.ret).bnd(mM9.ret).bnd(mM10.ret).bnd(mM15.ret).bnd(mM16.ret).bnd(mM17.ret).bnd(mM18.ret).bnd(mM19.ret).bnd(update);
+  .bnd(mM6.ret).bnd(mM7.ret).bnd(mM8.ret).bnd(mM9.ret).bnd(mM10.ret).bnd(mM15.ret)
+  .bnd(mM16.ret).bnd(mM17.ret).bnd(mM18.ret).bnd(mM19.ret).bnd(update);
 }
 
 function updateSteps() {
@@ -444,7 +442,7 @@ function updateSteps() {
      .bnd(() => mMZ2
      .bnd(() => mM2.ret('Click it again.')
      .bnd(() => mMZ2
-     .bnd(() => mM3.ret('Keep going')
+     .bnd(() => mM3.ret('Keep going. The current score is ' + mM13.x)
      .bnd(() => mMZ2
      .bnd(() => mM4.ret('One more')
      .bnd(() => mMZ2

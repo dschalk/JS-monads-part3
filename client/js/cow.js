@@ -62,12 +62,11 @@ const steps = h('pre', {style: {color: '#AFEEEE' }},
 
 const dice = h('pre', {style: {color: '#AFEEEE' }}, 
 `function updateNums(e) {
-  mM2.ret([e.target.value, e.target.textContent]) 
-  .bnd(() => mM3)
-  .bnd(push,mM2.x[1])
-  .bnd(() => {mM1.x[mM2.x[0]] = ""; return mM5;})
-  .bnd(update)
-  if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
+    mM3
+    .bnd(push,e.target.textContent)
+    .bnd(() => {mM1.x[e.target.value] = "";})
+    if (mM3.x.length === 2 && mM8.x !== 0) {updateCalc();}
+    update0();
 }
 
 function updateOp(e) {

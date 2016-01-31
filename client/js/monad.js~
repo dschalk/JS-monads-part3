@@ -226,7 +226,7 @@ var log = function log(x,message) {
   return mon;
 };
 
-var dVelay = function delay(x, mon) {
+var delay = function delay(x, mon) {
   return new Promise(function (resolve, reject) {
     setTimeout(resolve, 2000);
   });
