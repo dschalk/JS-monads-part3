@@ -108,33 +108,18 @@ var ret = function ret(v) {
   return mon;
 }
 ```
-The game example (above) shows MonadIter instances being used in independent branches. It, along with an example of a single MondadIter instance helping control movement along a four-stage progression, are running online at [schalk.net:3093](http://schalk.net:3093).
+updateCalc (above) shows MonadIter instances being used in independent branches. It, along with an example of a single MondadIter instance helping control movement along a four-stage progression, are running online at [schalk.net:3093](http://schalk.net:3093).
 ##Some Elementary Operations
 For any monad m and function f mapping values to monads:
 
-m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-asigned to a new monad with the same value as m and the id of the former m2, which normally would be "m2". So, for all practical purposes, mM2 got a new value.
+m.bnd(m2.ret) gives m2 the same value as m. In other words, m.x = m2.x. 
 
-m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of f(m.x) and the id of the previous m2.
+m.bnd(f).bnd(m2.ret) leaves m unchanged, but assigns the value f(m.x) to m2.
 
-m.bnd(f).bnd(m.ret) seems to change m's value, m.x, to f(m.x). Under the hood, it actually re-assigns the identifier "m" to a new monad with a value of f(previous m.x).
+m.bnd(f).bnd(m.ret) changes m's value to f(m.x).
 
 m.bnd(x => m2.bnd(y => m3.bnd(z => m4.ret(f(x,y,z)) leaves m, m2, and m3 unchanged, but provides their values as arguments to f, giving mM4 the value f(mM1.x, mM2.x, mM3.x). That result could also be accomplished by simply running ret(f(mM1.x, mM2.x, mM3.x)).bnd(mM4.ret) (see "m.bnd(mM2.ret)" above).
 
 "bnd()" is designed to take as arguments functions mapping values to monads, but functions mapping values to values also work. For example, ret(4).bnd(x => x\*x\*x) returns the number 64.
-
-
-##Caution
-
-Assigning an identifier to a named monad can lead to unexpected results if you don't carefully think about what you are doing. Consider:
-```javascript
-mM1.ret(2)
-var a = mM1
-a.ret(77)
-
-console.log('a.x ===', a.x)       // a.x === 2
-console.log('mM1.x ===', mM1.x)   // mM1.x === 77
-```
-"var a = mM1" assigned the identifier "a" to a monad with a value of 2 and an id of "mM1", so a.ret(77) assigned "mM1" to a new monad with a value of 77 and an id of "mM1", replacing the previous monad named "mM1". "a" still points to a monad with a value of 2.
-
 
 

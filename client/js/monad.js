@@ -43,14 +43,10 @@ var Monad = function Monad(z, g) {
   };
 
   this.ret = function (a) {
-    var str = _this.id;
-    if (str === 'anonymous') {
-      return new Monad(a, 'anonymous');
-    };
-    eval(str + '= new Monad(a,' + "str" + ')');
-    return window[_this.id];
+    _this.x = a;
+    return _this;
   };
-}
+};
 
 var ret = function ret(v) {
   var mon = new Monad(v, 'anonymous');

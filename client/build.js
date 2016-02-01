@@ -18,7 +18,7 @@ var _snabbdomH2 = _interopRequireDefault(_snabbdomH);
 var Group = 'solo';
 var Name = 'Fred';
 
-var monad = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class Monad {\n    constructor(z,g) {\n\n      this.x = z;\n      if (arguments.length === 1) {this.id = \'anonymous\'}\n      else {this.id = g}\n\n      this.bnd = (func, ...args) => {\n        return func(this.x, ...args);\n      };\n\n      this.ret = a => {\n        var str = this.id\n        if (str === \'anonymous\') {return new Monad(a,\'anonymous\')};\n        eval(str + \'= new Monad(a,\' + "str" + \')\'); \n        return window[this.id];\n      };\n    }\n  };\n');
+var monad = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class Monad {\n    constructor(z,g) {\n\n      this.x = z;\n      if (arguments.length === 1) {this.id = \'anonymous\'}\n      else {this.id = g}\n\n      this.bnd = (func, ...args) => {\n        return func(this.x, ...args);\n      };\n\n      this.ret = a => {\n        this.x = a;\n        return this;\n      };\n    }\n  };\n');
 
 var monadIter = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class MonadIter {\n    constructor() {\n\n      this.p = function() {};\n\n      this.release = () => {\n        return this.p();\n      }\n \n      this.bnd = func => {\n          this.p = func;\n      }\n    }\n  }\n');
 

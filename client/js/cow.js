@@ -17,10 +17,8 @@ const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
       };
 
       this.ret = a => {
-        var str = this.id
-        if (str === 'anonymous') {return new Monad(a,'anonymous')};
-        eval(str + '= new Monad(a,' + "str" + ')'); 
-        return window[this.id];
+        this.x = a;
+        return this;
       };
     }
   };
