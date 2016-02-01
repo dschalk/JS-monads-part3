@@ -112,9 +112,9 @@ The game example (above) shows MonadIter instances being used in independent bra
 ##Some Elementary Operations
 For any monad m and function f mapping values to monads:
 
-m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-asigned to a new monad with the same value as m; i.e., m.x.
+m.bnd(m2.ret) seems to give monad m2 m's value. Actually, m2 is abandoned to the garbage collector and the identifier "m2" gets re-asigned to a new monad with the same value as m and the id of the former m2, which normally would be "m2". So, for all practical purposes, mM2 got a new value.
 
-m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of f(m.x).
+m.bnd(f).bnd(m2.ret) leaves m unchanged, but re-assigns "m2" to a monad with a value of f(m.x) and the id of the previous m2.
 
 m.bnd(f).bnd(m.ret) seems to change m's value, m.x, to f(m.x). Under the hood, it actually re-assigns the identifier "m" to a new monad with a value of f(previous m.x).
 
