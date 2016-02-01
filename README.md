@@ -46,6 +46,7 @@ The "mM" prefix designates monads. The "mMZ" prefix specifically designates inst
 
 ```javascript
   class Monad {
+    var _this = this;
     constructor(z,g) {
 
       this.x = z;
@@ -53,27 +54,28 @@ The "mM" prefix designates monads. The "mMZ" prefix specifically designates inst
       else {this.id = g}
 
       this.bnd = function (func, ...args) {
-        return func(this.x, ...args);
+        return func(_this.x, ...args);
       };
 
       this.ret = function (a) {
-        this.x = a;
-        return this;
+        _this.x = a;
+        return _this;
       };
     }
   };
 
   class MonadIter {
+    var _this = this;
     constructor() {
 
       this.p = function() {};
 
       this.release = () => {
-        return this.p();
+        return _this.p();
       }
  
       this.bnd = func => {
-          this.p = func;
+          _this.p = func;
       }
     }
   }
