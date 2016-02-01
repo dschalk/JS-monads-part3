@@ -6,35 +6,37 @@ var Group = 'solo';
 var Name = 'Fred';
 
 const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
+    var _this = this; 
     constructor(z,g) {
 
       this.x = z;
       if (arguments.length === 1) {this.id = 'anonymous'}
       else {this.id = g}
 
-      this.bnd = (func, ...args) => {
-        return func(this.x, ...args);
+      this.bnd = function (func, ...args) {
+        return func(_this.x, ...args);
       };
 
-      this.ret = a => {
-        this.x = a;
-        return this;
+      this.ret = function (a) {
+        _this.x = a;
+        return _this;
       };
     }
   };
 ` );  
-  
+
 const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
+    var _this = this;                  
     constructor() {
 
       this.p = function() {};
 
-      this.release = () => {
-        return this.p();
+      this.release = function () {
+        return _this.p();
       }
  
-      this.bnd = func => {
-          this.p = func;
+      this.bnd = function (func) {
+          _this.p = func;
       }
     }
   }

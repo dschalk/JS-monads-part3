@@ -18,9 +18,9 @@ var _snabbdomH2 = _interopRequireDefault(_snabbdomH);
 var Group = 'solo';
 var Name = 'Fred';
 
-var monad = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class Monad {\n    constructor(z,g) {\n\n      this.x = z;\n      if (arguments.length === 1) {this.id = \'anonymous\'}\n      else {this.id = g}\n\n      this.bnd = (func, ...args) => {\n        return func(this.x, ...args);\n      };\n\n      this.ret = a => {\n        this.x = a;\n        return this;\n      };\n    }\n  };\n');
+var monad = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class Monad {\n    var _this = this; \n    constructor(z,g) {\n\n      this.x = z;\n      if (arguments.length === 1) {this.id = \'anonymous\'}\n      else {this.id = g}\n\n      this.bnd = function (func, ...args) {\n        return func(_this.x, ...args);\n      };\n\n      this.ret = function (a) {\n        _this.x = a;\n        return _this;\n      };\n    }\n  };\n');
 
-var monadIter = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class MonadIter {\n    constructor() {\n\n      this.p = function() {};\n\n      this.release = () => {\n        return this.p();\n      }\n \n      this.bnd = func => {\n          this.p = func;\n      }\n    }\n  }\n');
+var monadIter = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  class MonadIter {\n    var _this = this;                  \n    constructor() {\n\n      this.p = function() {};\n\n      this.release = function () {\n        return _this.p();\n      }\n \n      this.bnd = function (func) {\n          _this.p = func;\n      }\n    }\n  }\n');
 
 var steps = (0, _snabbdomH2['default'])('pre', { style: { color: '#AFEEEE' } }, '  function updateSteps() {\n    mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret).bnd(mM4.ret)\n     .bnd(() => mM1.ret(\'Click the mMZ2.release() button to proceed\')\n     .bnd(() => mMZ2\n     .bnd(() => mM2.ret(\'Click it again.\')\n     .bnd(() => mMZ2\n     .bnd(() => mM3.ret(\'Keep going\')\n     .bnd(() => mMZ2\n     .bnd(() => mM4.ret(\'One more\')\n     .bnd(() => mMZ2\n     .bnd(() => mM1.ret(0).bnd(mM2.ret).bnd(mM3.ret)\n     .bnd(mM4.ret)\n      ))))))))) \n  oldVnode = patch(oldVnode, newVnode()); \n}  ');
 

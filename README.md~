@@ -52,15 +52,13 @@ The "mM" prefix designates monads. The "mMZ" prefix specifically designates inst
       if (arguments.length === 1) {this.id = 'anonymous'}
       else {this.id = g}
 
-      this.bnd = (func, ...args) => {
+      this.bnd = function (func, ...args) {
         return func(this.x, ...args);
       };
 
-      this.ret = a => {
-        var str = this.id
-        if (str === 'anonymous') {return new Monad(a,'anonymous')};
-        eval(str + '= new Monad(a,' + "str" + ')'); 
-        return window[this.id];
+      this.ret = function (a) {
+        this.x = a;
+        return this;
       };
     }
   };

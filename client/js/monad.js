@@ -8,25 +8,19 @@ function _classCallCheck(instance, Constructor) {
 
 var MonadIter = function MonadIter() {
   var _this = this;
-
-  _classCallCheck(this, MonadIter);
-
-  this.p = function() {};
+  this.p = function () {};
 
   this.release = function () {
     return _this.p();
   };
 
   this.bnd = function (func) {
-      _this.p = func;
+    _this.p = func;
   };
 };
 
 var Monad = function Monad(z, g) {
-  var _this = this;
-
-  _classCallCheck(this, Monad);
-
+  var _this = this;  
   this.x = z;
   if (arguments.length === 1) {
     this.id = 'anonymous';

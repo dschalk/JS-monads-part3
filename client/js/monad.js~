@@ -8,25 +8,19 @@ function _classCallCheck(instance, Constructor) {
 
 var MonadIter = function MonadIter() {
   var _this = this;
-
-  _classCallCheck(this, MonadIter);
-
-  this.p = function() {};
+  this.p = function () {};
 
   this.release = function () {
     return _this.p();
   };
 
   this.bnd = function (func) {
-      _this.p = func;
+    _this.p = func;
   };
 };
 
 var Monad = function Monad(z, g) {
-  var _this = this;
-
-  _classCallCheck(this, Monad);
-
+  var _this = this;  
   this.x = z;
   if (arguments.length === 1) {
     this.id = 'anonymous';
@@ -43,14 +37,10 @@ var Monad = function Monad(z, g) {
   };
 
   this.ret = function (a) {
-    var str = _this.id;
-    if (str === 'anonymous') {
-      return new Monad(a, 'anonymous');
-    };
-    eval(str + '= new Monad(a,' + "str" + ')');
-    return window[_this.id];
+    _this.x = a;
+    return _this;
   };
-}
+};
 
 var ret = function ret(v) {
   var mon = new Monad(v, 'anonymous');
