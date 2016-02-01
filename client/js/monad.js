@@ -38,6 +38,7 @@ var Monad = function Monad(z, g) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
+
     return func.apply(undefined, [_this.x].concat(args));
   };
 
@@ -49,9 +50,7 @@ var Monad = function Monad(z, g) {
     eval(str + '= new Monad(a,' + "str" + ')');
     return window[_this.id];
   };
-};
-
-;
+}
 
 var ret = function ret(v) {
   var mon = new Monad(v, 'anonymous');
@@ -70,7 +69,6 @@ var M = function M(a,b) {
   var mon = new Monad(a,b);
   return mon;
 };
-
 
 var mM1 = M([],'mM1');
 var mM2 = M(0,'mM2');

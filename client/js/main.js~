@@ -6,7 +6,6 @@ import h from 'snabbdom/h';
 
 var Group = 'solo';
 var Name;
-var afocus = {autofocus: false};
 
 var updateScoreboard = function updateScoreboard(v) {
   mMscoreboard.ret([]);
@@ -62,7 +61,7 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
   return h('div',{style: style3}, 
    [  h('div',{style: { width: '60%', textAlign: 'left', marginLeft: 40, marginRight: '17%', fontSize: '22px'}}, 
     [ h('div', [
-      h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}, on: {click: updateFocus}}, 'Game/Chat'  ),
+      h('a', { props: {href: '#signin'}, style: {color: '#FFBBBB'}}, 'Game/Chat'  ),
     ] ),
       h('h1', 'JS-monads-part3'),
       h('br'),  
@@ -70,7 +69,7 @@ function view(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11,
       h('a', {props: {href: 'http://schalk.net' },  style: {color: '#EECCFF'}},' http://schalk.net'), 
       h('span', ' and a code repo at '),
       h('a', {props: {href: 'https://github.com/dschalk?tab=repositories'}, style: {color: '#EECCFF'}}, ' github repos' ),
-      h('p', 'This project is not about mathematics, it is about controlling the flow of actions in web applications. The function "ret" does happen to be similar to "return" in Haskell. For any value v, ret(v) returns a monad with value v, and for all monads m, and functions f mapping values to monads, ret(v).bnd(f) === f(v) and m.bnd(ret) = m. And, like Haskell monads, composition is associative; that is, m.bnd(f).bnd(g) === m.bnd(x => f(x).bnd(g)). I find these facts to be reassuring, and they help explain why the monads are so robust and versitile. ' ),
+      h('p', 'This project is not about mathematics, it is about controlling the flow of actions in web applications. The function "ret" does happen to be similar to "return" in Haskell. For any value v, ret(v) returns a monad with value v, and for all monads m, and functions f mapping values to monads, ret(v).bnd(f) is equivalent to f(v) and ret(v).bnd(ret) is equivalent to ret(v). And, like Haskell monads, composition is associative; that is, for any monad m and functions f and g mapping values to monads, m.bnd(f).bnd(g) and m.bnd(x => f(x).bnd(g)) both produce the same result. For me, these facts are reassuring, and I think they help explain why these monads are robust and versitile. ' ),
       h('p', ' The monads, monad constructors, and most of the functions demonstrated on this page are in a script that comes with the index.html file, so by pressing F12 you can immediately experiment with them in the browser console. Here is the basic monad constructor: ' ),
       cow.monad,
       h('p', 'And here is MonadIter: ' ),
@@ -214,7 +213,7 @@ h('p', 'Clicking numbers and operators calls updateNums and UpdateOps, respectiv
         h('a', { props: {href: '#rules'}, style: {color: '#FFBBBB'}}, 'Game Rules'  ),
         h('br', ),    
         h('span', 'Change group: '  ),   
-        h('input', {style: messageStyle, on: {keydown: updateGroup}, props: afocus } ),
+        h('input', {style: messageStyle, on: {keydown: updateGroup} } ),
         
         h('br', ),           
         h('div', `Group: ${Group}` ),
@@ -372,7 +371,6 @@ function updateLogin(e) {
        linkStyle = {display: 'block'};
        mM3.ret([]).bnd(mM2.ret);
        e.target.value = '';
-       afocus = {autofocus: true};
        update0();
      }
 }
