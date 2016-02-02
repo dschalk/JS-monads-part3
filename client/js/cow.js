@@ -275,9 +275,17 @@ const updateNext = h('pre', {style: {color: '#AFEEEE' }},
   }  `
 );  
 
+const ret = h('pre', {style: {color: '#AFEEEE' }}, 
+`  var ret = function ret(v) {
+     var mon = new Monad(v, 'anonymous');
+     return mon;
+  }  `
+);  
+
+
 
 export default {monad, monadIter, steps, dice, send, next, updateNext, 
-  pause, pauseDemo, messages1, messages2, messages3, numbers, numbers2, numbers3};
+  pause, pauseDemo, messages1, messages2, messages3, numbers, numbers2, numbers3, ret};
 
 
 
