@@ -296,8 +296,7 @@ function updateCalc() {
                     .bnd(newRoll)) ),
           ( mMZ5.bnd(() => mM13
                         .bnd(score,5)
-                        .bnd(next, 25, mMZ6)
-                        .bnd(newRoll)) ),
+                        .bnd(next, 25, mMZ6)) ),
               ( mMZ6.bnd(() => mM9.bnd(score2) 
                             .bnd(next,3,mMZ7)) ),
                   (mMZ7.bnd(() => mM13.bnd(winner)) ),                 

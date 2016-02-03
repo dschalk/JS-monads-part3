@@ -20,8 +20,7 @@ The flow of the interactive websockets game running at [http://schalk.net:3093](
                       .bnd(newRoll)) ),
             ( mMZ5.block().bnd(() => mM13
                           .bnd(score,5)
-                          .bnd(next, 25, mMZ6)
-                          .bnd(newRoll)) ),
+                          .bnd(next, 25, mMZ6)) ),
                 ( mMZ6.block().bnd(() => mM13
                               .bnd(score2) 
                               .bnd(() => mMgoals.bnd(next,3,mMZ7))) ),
