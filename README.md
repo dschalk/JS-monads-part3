@@ -96,7 +96,7 @@ Here are the definitions of "next" and "next2":
     return ret(x);
   }
 ```
-Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, functions are stored in the "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released causing the function p to execute. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p is called. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
+Scanning down the lines of "updateCalc()" (above), we see that the first time it is called, "p" attributes of mMZ2, mMZ4, mMZ5, mMZ6, and mMZ7 become references to functions. Then a computation is performed, and if the result is "18" or "20",  either mM4 or mM5 is released causing the function p to execute. If the result is a multiple of the number "5", mMZ5 is released. And if the result is "25", mMZ6.p is called. Finally, if the number of goals is "3", mMZ7 is released, ending the game.
 
  This project is not about mathematics, it is about controlling the flow of actions in web applications. The function "ret" does happen to be similar to "return" in Haskell. For any value v, ret(v) returns a monad with value v, and for all monads m, values v, and functions f mapping values to monads, ret(v).bnd(f) is equivalent to f(v) and ret(v).bnd(ret) is equivalent to ret(v). And, like Haskell monads, composition is associative; that is, for any monad m and functions f and g mapping values to monads, m.bnd(f).bnd(g) and m.bnd(x => f(x).bnd(g)) both produce the same result. For me, these facts are reassuring, and I think they help explain why the monads are robust and versitile. 
 
@@ -111,7 +111,7 @@ updateCalc (above) shows MonadIter instances being used in independent branches.
 ##Some Elementary Operations
 For any monad m and function f mapping values to monads:
 
-m.bnd(m2.ret) gives m2 the same value as m. In other words, m.x = m2.x. 
+m.bnd(m2.ret) gives m2 the same value as m. In other words, m.x === m2.x returns true. 
 
 m.bnd(f).bnd(m2.ret) leaves m unchanged, but assigns the value f(m.x) to m2.
 
