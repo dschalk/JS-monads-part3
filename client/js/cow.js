@@ -121,7 +121,7 @@ var next2 = function next(x,condition,mon2) {
 
 var score = function(v,j) {
   socket.send('CG#$42,' + Group + ',' + Name + ',' + j + ',' + 0);
-  return ret(v + j);
+  return mM13.ret(v + j);
 }
 
 var score2 = function score2() {
