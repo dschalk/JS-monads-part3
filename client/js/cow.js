@@ -5,24 +5,25 @@ import h from 'snabbdom/h';
 var Group = 'solo';
 var Name = 'Fred';
 
-const monad = h('pre', {style: {color: '#AFEEEE' }}, `  class Monad {
-    var _this = this; 
-    constructor(z,g) {
+const monad = h('pre', {style: {color: '#AFEEEE' }}, `  var Monad = function Monad(z, g) {
+    var _this = this;
 
-      this.x = z;
-      if (arguments.length === 1) {this.id = 'anonymous'}
-      else {this.id = g}
+    this.x = z;
+    if (arguments.length === 1) {
+      this.id = 'anonymous';
+    } else {
+      this.id = g;
+    };
 
-      this.bnd = function (func, ...args) {
-        return func(_this.x, ...args);
-      };
+    this.bnd = function (func, ...args) {
+       return func(_this.x, ...args);
+    };
 
-      this.ret = function (a) {
-        _this.x = a;
-        return _this;
-      };
-    }
-  };
+    this.ret = function (a) {
+      window[_this.id] = new Monad(a, _this.id);
+      return window[_this.id]
+    };
+  };               
 ` );  
 
 const monadIter = h('pre', {style: {color: '#AFEEEE' }}, `  class MonadIter {
@@ -276,8 +277,7 @@ const updateNext = h('pre', {style: {color: '#AFEEEE' }},
 
 const ret = h('pre', {style: {color: '#AFEEEE' }}, 
 `  var ret = function ret(v) {
-     var mon = new Monad(v, 'anonymous');
-     return mon;
+     return new Monad(v, 'anonymous');
   }  `
 );  
 

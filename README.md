@@ -44,24 +44,25 @@ The flow of the interactive websockets game running at [http://schalk.net:3093](
 The "mM" prefix designates monads. The "mMZ" prefix specifically designates instances of MonadIter. Here is how the monad classes are defined:
 
 ```javascript
-  class Monad {
+  var Monad = function Monad(z, g) {
     var _this = this;
-    constructor(z,g) {
 
-      this.x = z;
-      if (arguments.length === 1) {this.id = 'anonymous'}
-      else {this.id = g}
+    this.x = z;
+    if (arguments.length === 1) {
+      this.id = 'anonymous';
+    } else {
+      this.id = g;
+    };
 
-      this.bnd = function (func, ...args) {
-        return func(_this.x, ...args);
-      };
+    this.bnd = function (func, ...args) {
+       return func(_this.x, ...args);
+    };
 
-      this.ret = function (a) {
-        _this.x = a;
-        return _this;
-      };
-    }
-  };
+    this.ret = function (a) {
+      window[_this.id] = new Monad(a, _this.id);
+      return window[_this.id]
+    };
+  };               
 
   class MonadIter {
     var _this = this;
